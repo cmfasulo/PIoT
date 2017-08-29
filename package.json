@@ -1,0 +1,25 @@
+{
+  "name": "PIoT",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "jade": "~1.11.0",
+    "mongoose": "^4.11.8",
+    "morgan": "~1.8.1",
+    "serve-favicon": "~2.4.2",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-scripts": "1.0.12"
+  },
+  "scripts": {
+    "start": "nodemon ./bin/www && react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
