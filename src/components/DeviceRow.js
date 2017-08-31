@@ -54,7 +54,7 @@ class DeviceRow extends Component {
           <td><input type="text" name="name" value={this.state.name} onChange={this.handleChange} required/></td>
           <td>
             <select name="type" value={this.state.type} onChange={this.handleChange} required>
-              <option value='light'>Light</option>
+              <option value='switch'>Switch</option>
               <option value='sensor'>Sensor</option>
             </select>
           </td>

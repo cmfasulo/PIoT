@@ -6,7 +6,7 @@ class AddDevice extends Component {
     super(props);
     this.state = {
       name: '',
-      type: 'light',
+      type: 'switch',
       location: 'living-room',
       localIp: ''
     };
@@ -48,7 +48,7 @@ class AddDevice extends Component {
           <label>
             Type:
             <select name="type" value={this.state.type} onChange={this.handleChange} className="form-control" required>
-              <option value='light'>Light</option>
+              <option value='switch'>Switch</option>
               <option value='sensor'>Sensor</option>
             </select>
           </label>
