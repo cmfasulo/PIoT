@@ -22,4 +22,5 @@ var Device = new Schema({
 mongoose.model('User', User);
 mongoose.model('Device', Device);
 
-mongoose.connect('mongodb://localhost/PIoT');
+mongoose.Promise = require('bluebird');
+mongoose.connect('mongodb://localhost/PIoT', { useMongoClient: true });

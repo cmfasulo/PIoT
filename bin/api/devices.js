@@ -27,9 +27,25 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.put('/:id', function(req, res, next) {
-  Device.findOneAndUpdate({ _id: req.body._id }, req.body, {new: true}, function(err, item) {
+  Device.findById(req.body._id, function(err, item) {
     if (err) { res.send(err); }
-    res.status(200).send(item);
+
+    var keys = Object.keys(req.body);
+    keys.forEach(function(key) {
+      item[key] = req.body[key];
+    });
+
+    if (req.body.state !== item.state) {
+      item.lastStateChange = getDateTime();
+    } else if (req.ip === item.localIp) {
+      item.status = 'online';
+      item.lastStatusUpdate = getDateTime();
+    }
+
+    item.save(function (err, updatedItem) {
+      if (err) { res.send(err); }
+      res.status(200).send(updatedItem);
+    });
   });
 });
 
@@ -44,5 +60,16 @@ router.delete('/:id', function (req, res, next) {
     });
   });
 });
+
+var getDateTime = function() {
+  var currentdate = new Date();
+  var datetime = (currentdate.getMonth()+1) + "/"
+    + currentdate.getDate() + "/"
+    + currentdate.getFullYear() + "-"
+    + currentdate.getHours() + ":"
+    + currentdate.getMinutes() + ":"
+    + currentdate.getSeconds();
+  return datetime;
+}
 
 module.exports = router;

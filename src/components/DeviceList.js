@@ -95,7 +95,6 @@ class DeviceList extends Component {
             <table className="table table-striped">
               <thead>
                 <tr>
-                  <td>ID</td>
                   <td>Name</td>
                   <td>Type</td>
                   <td>Location</td>

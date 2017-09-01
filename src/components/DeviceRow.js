@@ -12,14 +12,22 @@ class DeviceRow extends Component {
         name: this.props.obj.name,
         type: this.props.obj.type,
         location: this.props.obj.location,
-        localIp: this.props.obj.localIp
+        localIp: this.props.obj.localIp,
+        state: this.props.obj.state
       }
       this.toggleEditing = this.toggleEditing.bind(this);
+      this.toggleState = this.toggleState.bind(this);
       this.handleDelete = this.handleDelete.bind(this);
       this.handleUpdate = this.handleUpdate.bind(this);
       this.handleChange = this.handleChange.bind(this);
   }
 
+  toggleState(event) {
+    let device = this.state;
+    device.state = device.state === 'on' ? 'off' : 'on';
+    this.setState(device);
+    this.handleUpdate(event);
+  }
   toggleEditing(event) {
     event.preventDefault();
     this.setState({ isEditing: !this.state.isEditing })
@@ -50,7 +58,6 @@ class DeviceRow extends Component {
     if (this.state.isEditing) {
       return (
         <tr>
-          <td>{this.props.obj._id}</td>
           <td><input type="text" name="name" value={this.state.name} onChange={this.handleChange} required/></td>
           <td>
             <select name="type" value={this.state.type} onChange={this.handleChange} required>
@@ -89,15 +96,20 @@ class DeviceRow extends Component {
         </tr>
       )
     } else {
+      let deviceOn = this.state.state === 'on' ? true : false;
       return (
         <tr>
-          <td>{this.props.obj._id}</td>
           <td>{this.props.obj.name}</td>
           <td>{this.props.obj.type}</td>
           <td>{this.props.obj.location}</td>
           <td>{this.props.obj.localIp}</td>
           <td>{this.props.obj.status}</td>
-          <td>{this.props.obj.state}</td>
+          <td>
+            <label className="switch">
+              <input type="checkbox" checked={deviceOn} onChange={this.toggleState}/>
+              <span className="slider round"></span>
+            </label>
+          </td>
           <td>{this.props.obj.lastStatusUpdate}</td>
           <td>{this.props.obj.lastStateChange}</td>
           <td>

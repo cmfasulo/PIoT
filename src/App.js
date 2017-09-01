@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './drawables/logo.svg';
+import pi from './drawables/pi.svg';
 import './styles/App.css';
 
 import DeviceList from './components/DeviceList';
@@ -10,7 +10,7 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
+          <img src={pi} className="App-logo" alt="pi" />
           <h2>Welcome to PIoT!</h2>
         </div>
         <DeviceList></DeviceList>
