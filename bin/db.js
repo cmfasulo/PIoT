@@ -9,9 +9,9 @@ var User = new Schema({
 });
 
 var Device = new Schema({
-    name : { type: String, required: true },
+    name : { type: String, required: true, unique: true },
     type: { type: String, required: true },
-    localIp: { type: String, required: true },
+    localIp: { type: String, required: true, unique: true },
     location: { type: String, required: true },
     status: { type: String, default: 'offline' },
     state: { type: String, default: 'off' },
