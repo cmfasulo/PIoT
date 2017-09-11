@@ -33,10 +33,6 @@
   font-size: large;
 }
 
-td {
-  vertical-align: middle !important;
-}
-
 @keyframes pulse {
   0% {
     -moz-box-shadow: 0 0 0 0 rgba(33,150,244, 0.4);

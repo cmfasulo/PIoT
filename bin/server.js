@@ -3,9 +3,13 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var db = require( './db' );
+var db = require( './db/db' );
+var mongoose = require('mongoose');
 var cors = require('cors');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
+// API Endpoints
 var Users = require('./api/users');
 var Devices = require('./api/devices');
 
@@ -15,12 +19,25 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-// app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('express-session')({
+  secret: 'random string',
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cors());
+// app.use(express.static(path.join(__dirname, 'public')));
 
-// API Endpoints
+// Router Middleware
 app.use('/users', Users);
 app.use('/devices', Devices);
+
+// Configure passport
+var User = mongoose.model('User');
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -13,6 +13,38 @@ body {
   min-height: 100%;
 }
 
+.login, .signup {
+  text-align: center;
+}
+
+.login > input, .signup > input {
+  display: block;
+  margin: 0 auto 20px auto;
+}
+
+table {
+  table-layout: fixed;
+  word-wrap: break-word;
+}
+
+input, select {
+  max-width: 100%;
+}
+
+td {
+  vertical-align: middle !important;
+}
+
+.online {
+  color: green;
+  font-weight: bold;
+}
+
+.offline {
+  color: red;
+  font-weight: bold;
+}
+
 .switch {
   position: relative;
   display: inline-block;

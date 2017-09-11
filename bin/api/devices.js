@@ -40,19 +40,21 @@ router.put('/:id', function(req, res, next) {
           item[key] = req.body[key];
         });
 
-        if (response.data.state === req.body.state) {
-          item.lastStateChange = getDateTime();
-          item.lastStatusUpdate = getDateTime();
-          item.save(function (err, updatedItem) {
-            if (err) { res.send(err); }
-            res.status(200).send(updatedItem);
-          });
-        } else {
-          res.send('Error: Device was not updated or is unresponsive.');
-        }
+        item.state = response.data.state;
+        item.lastStateChange = getDateTime();
+        item.lastStatusUpdate = getDateTime();
+        item.save(function (err, updatedItem) {
+          if (err) { res.send(err); }
+          res.status(200).send(updatedItem);
+        });
       })
       .catch(function (error) {
-        res.send(err);
+        item.state = 'off';
+        item.status = 'offline';
+        item.save(function (err, updatedItem) {
+          if (err) { res.send(err); }
+          res.status(200).send(updatedItem);
+        });
       });
     } else {
       var keys = Object.keys(req.body);

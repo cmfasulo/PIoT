@@ -2,9 +2,10 @@ import React, { Component } from 'react';
 import pi from './drawables/pi.svg';
 import './styles/App.css';
 
-import DeviceList from './components/DeviceList';
+import List from './components/List';
+import deviceProps from './components/Device/deviceProps';
 
-// TODO: establish consistent use of ES6 or not throughout app
+// TODO: establish consistent use of ES6 throughout app
 class App extends Component {
   render() {
     return (
@@ -13,7 +14,7 @@ class App extends Component {
           <img src={pi} className="App-logo" alt="pi" />
           <h2>Welcome to PIoT!</h2>
         </div>
-        <DeviceList></DeviceList>
+        <List {...deviceProps}></List>
         <div className="App-footer">
         </div>
       </div>
