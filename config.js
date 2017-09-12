@@ -1,6 +1,10 @@
 var config = {
   address: 'http://localhost',
-  post: '3000'
+  port: 4242,
+  dbName: 'PIoT',
+  dbHost: 'localhost',
+  dbPort: 27017,
+  secret: 'random string secret?'
 };
 
 module.exports = config;

@@ -4,6 +4,24 @@ var mongoose = require('mongoose');
 var Device = mongoose.model('Device');
 var axios = require('axios');
 
+var isAuthenticated = function (req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+  }
+	res.send('Permission Denied.');
+}
+
+var getDateTime = function() {
+  var currentdate = new Date();
+  var datetime = (currentdate.getMonth()+1) + "/"
+    + currentdate.getDate() + "/"
+    + currentdate.getFullYear() + "-"
+    + currentdate.getHours() + ":"
+    + currentdate.getMinutes() + ":"
+    + currentdate.getSeconds();
+  return datetime;
+}
+
 router.get('/', function(req, res, next) {
   Device.find(function(err, items, count) {
     if (err) { res.send(err); }
@@ -87,7 +105,7 @@ router.post('/checkin', function(req, res, next) {
   });
 });
 
-router.delete('/:id', function (req, res, next) {
+router.delete('/:id', isAuthenticated, function (req, res, next) {
   Device.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
 
@@ -98,16 +116,5 @@ router.delete('/:id', function (req, res, next) {
     });
   });
 });
-
-var getDateTime = function() {
-  var currentdate = new Date();
-  var datetime = (currentdate.getMonth()+1) + "/"
-    + currentdate.getDate() + "/"
-    + currentdate.getFullYear() + "-"
-    + currentdate.getHours() + ":"
-    + currentdate.getMinutes() + ":"
-    + currentdate.getSeconds();
-  return datetime;
-}
 
 module.exports = router;

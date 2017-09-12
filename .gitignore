@@ -1,6 +1,7 @@
 .git
 /node_modules
 /build
+config.js
 
 .DS_Store
 .env.local

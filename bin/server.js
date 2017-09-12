@@ -8,8 +8,12 @@ var mongoose = require('mongoose');
 var cors = require('cors');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var config = require('../config');
 
 // API Endpoints
+var Auth = require('./api/auth');
 var Users = require('./api/users');
 var Devices = require('./api/devices');
 
@@ -19,25 +23,27 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(require('express-session')({
-  secret: 'random string',
+app.use(session({
+  store: new MongoStore({ db: config.db, host: config.host, url: 'mongodb://'+config.dbHost+':'+config.dbPort+'/'+config.dbName }),
+  secret: config.secret,
+  maxAge: new Date(Date.now() + 900000),
   resave: false,
   saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
-// app.use(express.static(path.join(__dirname, 'public')));
-
-// Router Middleware
-app.use('/users', Users);
-app.use('/devices', Devices);
 
 // Configure passport
 var User = mongoose.model('User');
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
+
+// Router Middleware
+app.use('/', Auth);
+app.use('/users', Users);
+app.use('/devices', Devices);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

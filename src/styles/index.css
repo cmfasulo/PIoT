@@ -9,19 +9,6 @@ body {
   font-family: sans-serif;
 }
 
-#root {
-  min-height: 100%;
-}
-
-.login, .signup {
-  text-align: center;
-}
-
-.login > input, .signup > input {
-  display: block;
-  margin: 0 auto 20px auto;
-}
-
 table {
   table-layout: fixed;
   word-wrap: break-word;
@@ -33,6 +20,54 @@ input, select {
 
 td {
   vertical-align: middle !important;
+}
+
+.App {
+  text-align: center;
+  overflow: auto;
+  padding-bottom: 100px;
+}
+
+.App-logo {
+  border-radius: 50%;
+  box-shadow: 0 0 0 rgba(33,150,244, 0.4);
+  border-radius: 30%;
+  height: 80px;
+  animation: pulse infinite 2s;
+}
+
+.App-header, .App-footer {
+  background-color: #222;
+  padding: 20px;
+  color: white;
+}
+
+.App-header > h2 {
+  margin-bottom: 0;
+}
+
+.App-footer {
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+  width: 100%;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+#root {
+  min-height: 100%;
+}
+
+.login, .signup {
+  text-align: center;
+}
+
+.login > input, .signup > input {
+  display: block;
+  margin: 0 auto 20px auto;
 }
 
 .online {
@@ -101,4 +136,19 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba(33,150,244, 0.4);
+    box-shadow: 0 0 0 0 rgba(33,150,244, 0.4);
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+      box-shadow: 0 0 0 10px rgba(204,169,44, 0);
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+      box-shadow: 0 0 0 0 rgba(204,169,44, 0);
+  }
 }

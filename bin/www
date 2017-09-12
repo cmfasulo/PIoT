@@ -3,9 +3,9 @@
 var app = require('./server');
 var debug = require('debug')('PIoT:server');
 var http = require('http');
-// var config = require('../config');
+var config = require('../config');
 
-var port = normalizePort(process.env.PORT || 4242);
+var port = normalizePort(process.env.PORT || config.port || 4242);
 app.set('port', port);
 
 var server = http.createServer(app);
