@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import axios from '../../axios';
+import { Table } from 'react-bootstrap';
 import Row from './Row';
 
 class List extends Component {
@@ -10,11 +11,12 @@ class List extends Component {
     this.endpoint = props.endpoint || '';
     this.headerLabels = props.headerLabels || [];
     this.fields = props.fields || {};
+    this.dashboard = props.dashboard || false;
     this.state = { items: '' };
   }
 
   componentWillMount() {
-    axios.get(this.endpoint)
+    axios.get(this.endpoint, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
     .then(response => {
       this.setState({ items: response.data });
     })
@@ -25,7 +27,7 @@ class List extends Component {
 
   addItem(item) {
     let self = this;
-    return axios.post(this.endpoint, item)
+    return axios.post(this.endpoint, item, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
         self.setState({
           items: self.state.items.concat([response.data])
@@ -38,9 +40,8 @@ class List extends Component {
 
   updateItem(item) {
     let self = this;
-    return axios.put(this.endpoint+ item._id, item)
+    return axios.put(this.endpoint+ item._id, item, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        console.log('response:', response);
         let items = self.state.items;
         let index = items.findIndex(x => x._id === response.data._id);
         items[index] = response.data;
@@ -54,7 +55,7 @@ class List extends Component {
 
   deleteItem(id) {
     let self = this;
-    return axios.delete(this.endpoint + id)
+    return axios.delete(this.endpoint + id, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
         let items = self.state.items.filter(function(item) {
           return item._id !== response.data._id;
@@ -80,7 +81,7 @@ class List extends Component {
     if(this.state.items instanceof Array){
       return this.state.items.map(function(object, i){
         object.isForm = false;
-        return <Row listName={self.listName} obj={object} key={i} deleteItem={self.deleteItem.bind(self)} updateItem={self.updateItem.bind(self)} />;
+        return <Row listName={self.listName} dashboard={self.dashboard} obj={object} key={i} deleteItem={self.deleteItem.bind(self)} updateItem={self.updateItem.bind(self)} />;
       });
     }
   }
@@ -95,19 +96,19 @@ class List extends Component {
   render() {
     return (
       <div className="container">
-          <h3>{this.listName}</h3>
-          <table className={"table table-striped " + this.listName}>
-            <thead>
-              <tr>
-                {this.headerRow()}
-              </tr>
-            </thead>
-            <tbody>
-              {this.dataRow()}
-              {this.newRow()}
-            </tbody>
-          </table>
-          <hr/>
+        <h3>{this.listName}</h3>
+        <Table striped condensed hover className={this.listName}>
+          <thead>
+            <tr>
+              {this.headerRow()}
+            </tr>
+          </thead>
+          <tbody>
+            {this.dataRow()}
+            {!this.dashboard && this.newRow()}
+          </tbody>
+        </Table>
+        <hr/>
       </div>
     );
   }

@@ -3,47 +3,51 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var db = require( './db/db' );
-var mongoose = require('mongoose');
+var db = require( './db/db');
 var cors = require('cors');
 var passport = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
+var User = require('./db/models/User');
+var passportJWT = require('passport-jwt');
 var config = require('../config');
 
 // API Endpoints
-var Auth = require('./api/auth');
-var Users = require('./api/users');
-var Devices = require('./api/devices');
+var login = require('./api/login');
+var users = require('./api/users');
+var devices = require('./api/devices');
 
 var app = express();
 
+var ExtractJwt = passportJWT.ExtractJwt;
+var JwtStrategy = passportJWT.Strategy;
+
+var jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: config.secret
+};
+
+passport.use(new JwtStrategy(jwtOptions, function(jwt_payload, next) {
+  User.findById(jwt_payload.id, function(err, user) {
+    if (!user) { next(null, false); }
+    next(null, user);
+  });
+}));
+
+app.use(passport.initialize());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({
-  store: new MongoStore({ db: config.db, host: config.host, url: 'mongodb://'+config.dbHost+':'+config.dbPort+'/'+config.dbName }),
-  secret: config.secret,
-  maxAge: new Date(Date.now() + 900000),
-  resave: false,
-  saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(cors());
+app.use(cors({ origin: ['http://localhost:3000', 'http://127.0.0.1:3000'] }));
 
-// Configure passport
-var User = mongoose.model('User');
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 // Router Middleware
-app.use('/', Auth);
-app.use('/users', Users);
-app.use('/devices', Devices);
+app.use('/', login);
+app.use('/users', users);
+app.use('/devices', devices);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

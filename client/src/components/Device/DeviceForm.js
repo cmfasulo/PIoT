@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class DeviceEdit extends Component {
+class DeviceForm extends Component {
 
   constructor(props) {
     super(props);
@@ -15,8 +15,8 @@ class DeviceEdit extends Component {
       return '';
     } else {
       return (
-        <form onSubmit={(event) => this.props.handleUpdate(event, this.state)}>
-          <input type="submit" value="Update" className="btn btn-success"/>
+        <form onSubmit={this.props.toggleEditing}>
+          <input type="submit" value="Cancel" className="btn btn-warning"/>
         </form>
       )
     }
@@ -31,8 +31,8 @@ class DeviceEdit extends Component {
       )
     } else {
       return (
-        <form onSubmit={this.props.toggleEditing}>
-          <input type="submit" value="Cancel" className="btn btn-warning"/>
+        <form onSubmit={(event) => this.props.handleUpdate(event, this.state)}>
+          <input type="submit" value="Update" className="btn btn-success"/>
         </form>
       )
     }
@@ -62,7 +62,7 @@ class DeviceEdit extends Component {
   render() {
     return (
       <tr>
-        <td><input type="text" name="name" value={this.state.name} onChange={this.handleChange} required/></td>
+        <td><input type="text" name="name" placeholder="Name" value={this.state.name} onChange={this.handleChange} required/></td>
         <td>
           <select name="type" value={this.state.type} onChange={this.handleChange} required>
             <option value='switch'>Switch</option>
@@ -82,7 +82,7 @@ class DeviceEdit extends Component {
             <option value='kevin-bathroom'>Kevin&#39;s Bathroom</option>
           </select>
         </td>
-        <td><input type="text" name="localIp" value={this.state.localIp} onChange={this.handleChange} required/></td>
+        <td><input type="text" name="localIp" placeholder="Local IP" value={this.state.localIp} onChange={this.handleChange} required/></td>
         <td className={this.props.obj.status}>{this.props.obj.status.toUpperCase()}</td>
         <td>{this.props.obj.state && this.props.obj.state.toUpperCase()}</td>
         <td>{this.props.obj.stalastStatusUpdatete && this.props.obj.lastStatusUpdate}</td>
@@ -94,4 +94,4 @@ class DeviceEdit extends Component {
   }
 }
 
-export default DeviceEdit;
+export default DeviceForm;

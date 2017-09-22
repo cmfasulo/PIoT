@@ -2,39 +2,39 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var passport = require('passport');
-var User = require('../db/models/User');
+var Room = require('../db/models/rooms');
 
 var isAuthenticated = passport.authenticate('jwt', { session: false });
 
 router.get('/', isAuthenticated, function(req, res, next) {
-  User.find(function(err, items, count) {
+  Room.find(function(err, items, count) {
     if (err) { res.send(err); }
     res.status(200).send(items);
   });
 });
 
 router.get('/:id', isAuthenticated, function(req, res, next) {
-  User.findById(req.params.id, function(err, item) {
+  Room.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
     res.status(200).send(item);
   });
 });
 
 router.post('/', isAuthenticated, function(req, res, next) {
-  var newUser = new User(req.body);
+  var newRoom = new Room(req.body);
 
-  newUser.save(function(err, item) {
+  newRoom.save(function(err, item) {
     if (err) { res.send(err); }
     res.status(200).send(item);
   })
 });
 
 router.put('/:id', isAuthenticated, function(req, res, next) {
-  User.findById(req.params.id, function(err, item) {
+  Room.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
 
-    User = req.body;
-    User.save(function(err, item) {
+    Room = req.body;
+    Room.save(function(err, item) {
       if (err) { res.send(err); }
       res.status(200).send(item);
     });
@@ -42,7 +42,7 @@ router.put('/:id', isAuthenticated, function(req, res, next) {
 });
 
 router.delete('/:id', isAuthenticated, function (req, res, next) {
-  User.remove({ _id: req.params.id }, function (err, item) {
+  Room.remove({ _id: req.params.id }, function (err, item) {
     if (err) { res.send(err); }
     res.status(200).send(item);
   });

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Device = mongoose.model('Device');
+var Device = require('../db/models/Device');
 var axios = require('axios');
 
 var isAuthenticated = function (req, res, next) {

@@ -1,6 +1,6 @@
-let userProps = {
+let userList = {
   listName: 'Users',
-  endpoint: 'http://localhost:4242/users/',
+  endpoint: '/users/',
   headerLabels: ['First Name', 'Last Name', 'Username', 'Permissions'],
   fields: {
     firstName: '',
@@ -11,4 +11,4 @@ let userProps = {
   }
 };
 
-export default userProps;
+export default userList;

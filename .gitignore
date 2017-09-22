@@ -1,6 +1,5 @@
 .git
-/node_modules
-/build
+node_modules/
 config.js
 
 .DS_Store

@@ -1,6 +1,6 @@
-let deviceProps = {
+let deviceList = {
   listName: 'Devices',
-  endpoint: 'http://localhost:4242/devices/',
+  endpoint: '/devices/',
   headerLabels: ['Name', 'Type', 'Location', 'Local IP', 'Status', 'State', 'Last Status Update', 'Last State Change'],
   fields: {
     name: '',
@@ -14,4 +14,4 @@ let deviceProps = {
   }
 };
 
-export default deviceProps;
+export default deviceList;

@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
-// import UserShow from './User/UserShow'
-// import UserForm from './User/UserForm'
-import DeviceShow from './Device/DeviceShow'
-import DeviceForm from './Device/DeviceForm'
-// import {Link} from 'react-router-dom';
+import UserShow from '../User/UserShow';
+import UserForm from '../User/UserForm';
+import DeviceShow from '../Device/DeviceShow';
+import DeviceForm from '../Device/DeviceForm';
+import RoomShow from '../Room/RoomShow';
+import RoomForm from '../Room/RoomForm';
 
 class Row extends Component {
 
   constructor(props) {
     super(props);
+    this.dashboard = props.dashboard || false;
     this.state = props.obj || {};
     this.components = {
       show: {
-        // User: UserShow,
-        Device: DeviceShow
+        User: UserShow,
+        Device: DeviceShow,
+        Room: RoomShow
       },
       form: {
-        // User: UserForm,
-        Device: DeviceForm
+        User: UserForm,
+        Device: DeviceForm,
+        Room: RoomForm
       }
     };
 
@@ -81,7 +85,7 @@ class Row extends Component {
   showRow() {
     let ShowComponent = this.components.show[this.props.listName.slice(0, -1)];
 
-    return <ShowComponent obj={this.state} toggleState={this.toggleState.bind(this)} toggleEditing={this.toggleEditing.bind(this)} handleDelete={this.handleDelete.bind(this)} />;
+    return <ShowComponent obj={this.state} dashboard={this.dashboard} toggleState={this.toggleState.bind(this)} toggleEditing={this.toggleEditing.bind(this)} handleDelete={this.handleDelete.bind(this)} />;
   }
 
   render() {

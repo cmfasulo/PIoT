@@ -1,0 +1,12 @@
+nav {
+  background-color: #222;
+  color: white;
+  border-radius: 0 !important;
+}
+
+.nav-logo {
+  border-radius: 30%;
+  box-shadow: 0 0 0 rgba(33,150,244, 0.4);
+  padding: 10px;
+  animation: pulse infinite 2s;
+}
