@@ -1,15 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Device = require('../db/models/Device');
 var axios = require('axios');
+var passport = require('passport');
+var decode = require('jwt-decode');
+var Device = require('../db/models/Device');
 
-var isAuthenticated = function (req, res, next) {
-	if (req.isAuthenticated()) {
-		return next();
-  }
-	res.send('Permission Denied.');
-}
+var isAuthenticated = passport.authenticate('jwt', { session: false });
+
+var isAuthorized = function(auth) {
+  var token = auth.substring(auth.indexOf(' ') + 1);
+  var decoded = token && decode(token);
+
+  return decoded.admin;
+};
 
 var getDateTime = function() {
   var currentdate = new Date();
@@ -23,7 +27,7 @@ var getDateTime = function() {
 }
 
 router.get('/', function(req, res, next) {
-  Device.find(function(err, items, count) {
+  Device.find().populate('location').exec(function(err, items, count) {
     if (err) { res.send(err); }
     res.status(200).send(items);
   });
@@ -34,12 +38,16 @@ router.post('/', function(req, res, next) {
 
   newItem.save(function(err, item) {
     if (err) { res.send(err); }
-    res.status(201).send(item);
+
+    Device.findById(item._id).populate('location').exec(function(err, item) {
+      if (err) { res.send(err); }
+      res.status(200).send(item);
+    });
   });
 });
 
 router.get('/:id', function(req, res, next) {
-  Device.findById(req.params.id, function(err, item) {
+  Device.findById(req.params.id).populate('location').exec(function(err, item) {
     if (err) { res.send(err); }
     res.status(200).send(item);
   });
@@ -50,7 +58,7 @@ router.put('/:id', function(req, res, next) {
     if (err) { res.send(err); }
 
     if (req.body.state !== item.state) {
-      axios.get('http://' + req.body.localIp + '/' + req.body.state)
+      axios.get('http://' + req.body.localIp + '/' + req.body.state, { timeout: 3000 })
       .then(function (response) {
 
         var keys = Object.keys(req.body);
@@ -63,7 +71,11 @@ router.put('/:id', function(req, res, next) {
         item.lastStatusUpdate = getDateTime();
         item.save(function (err, updatedItem) {
           if (err) { res.send(err); }
-          res.status(200).send(updatedItem);
+
+          Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+            if (err) { res.send(err); }
+            res.status(200).send(item);
+          });
         });
       })
       .catch(function (error) {
@@ -71,7 +83,11 @@ router.put('/:id', function(req, res, next) {
         item.status = 'offline';
         item.save(function (err, updatedItem) {
           if (err) { res.send(err); }
-          res.status(200).send(updatedItem);
+
+          Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+            if (err) { res.send(err); }
+            res.status(200).send(item);
+          });
         });
       });
     } else {
@@ -82,9 +98,53 @@ router.put('/:id', function(req, res, next) {
 
       item.save(function (err, updatedItem) {
         if (err) { res.send(err); }
-        res.status(200).send(updatedItem);
+
+        Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+          if (err) { res.send(err); }
+          res.status(200).send(item);
+        });
       });
     }
+  });
+});
+
+router.get('/ping/:id', function(req, res, next) {
+  Device.findById(req.params.id, function(err, item) {
+    if (err) { res.send(err); }
+
+    axios.get('http://' + item.localIp + '/status', { timeout: 3000 })
+    .then(function (response) {
+      var keys = Object.keys(req.body);
+      keys.forEach(function(key) {
+        item[key] = req.body[key];
+      });
+
+      item.status = 'online';
+      item.state = response.data.state;
+      item.lastStateChange = getDateTime();
+      item.lastStatusUpdate = getDateTime();
+      item.save(function (err, updatedItem) {
+        if (err) { res.send(err); }
+
+        Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+          if (err) { res.send(err); }
+          res.status(200).send(item);
+        });
+      });
+    })
+    .catch(function (error) {
+      console.log('catch error: ', error);
+      item.state = 'off';
+      item.status = 'offline';
+      item.save(function (err, updatedItem) {
+        if (err) { res.send(err); }
+
+        Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+          if (err) { res.send(err); }
+          res.status(200).send(item);
+        });
+      });
+    });
   });
 });
 
@@ -106,15 +166,20 @@ router.post('/checkin', function(req, res, next) {
 });
 
 router.delete('/:id', isAuthenticated, function (req, res, next) {
-  Device.findById(req.params.id, function(err, item) {
-    if (err) { res.send(err); }
+  var authorized = isAuthorized(req.headers.authorization);
 
-    device = item;
-    Device.remove({ _id: device.id }, function (err, item) {
+  if (authorized) {
+    Device.findById(req.params.id, function(err, item) {
       if (err) { res.send(err); }
-      res.status(200).send(device);
+
+      Device.remove({ _id: item.id }, function (err, result) {
+        if (err) { res.send(err); }
+        res.status(200).send(item);
+      });
     });
-  });
+  } else {
+    res.status(401).send('Unauthorized: Only admins can delete devices.');
+  }
 });
 
 module.exports = router;

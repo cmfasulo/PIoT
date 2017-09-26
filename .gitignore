@@ -1,5 +1,6 @@
 .git
 node_modules/
+arduino/esp8266_device/
 config.js
 
 .DS_Store

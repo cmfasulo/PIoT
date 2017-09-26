@@ -1,36 +1,70 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { GridList } from 'material-ui/GridList';
 import './styles/App.css';
 
+import { BeatLoader } from 'react-spinners';
 import AppNav from './components/util/AppNav';
 import Admin from './components/Admin';
 import Profile from './components/Profile';
 import List from './components/util/List';
 import dashboardDevices from './props/dashboardDevices';
 
+const styles = {
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center'
+
+  },
+  gridList: {
+    textAlign: 'center',
+    overflowY: 'auto',
+    paddingBottom: '25px'
+  },
+  color: {
+    primary: "#2196f4",
+    white: "#ffffff"
+  }
+};
+
 class App extends Component {
 
-  renderList(props) {
-    return <List {...props}/>;
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      class: ''
+    }
+
+    this.toggleLoading = this.toggleLoading.bind(this);
+  }
+
+  toggleLoading(state) {
+    let className = state ? 'loading' : '';
+    this.setState({ loading: state, class: className });
   }
 
   render() {
     return (
       <div>
+        <div className={this.state.class}>
+          <BeatLoader color={styles.color.primary} loading={this.state.loading} />
+        </div>
         <AppNav/>
-        <Grid fluid>
-          <Row>
-            <Col xs={1}></Col>
-            <Col xs={10} className="App">
-              <Route exact path='/' render={() => (<List {...dashboardDevices} />)}/>
-              <Route path='/admin' component={Admin}/>
-              <Route path='/profile' component={Profile}/>
-            </Col>
-            <Col xs={1}></Col>
-          </Row>
+        <div style={styles.root}>
+          <GridList
+            cols={1}
+            cellHeight={'auto'}
+            padding={0}
+            style={styles.gridList}
+          >
+            <Route exact path='/' render={() => (<List {...dashboardDevices} toggleLoading={this.toggleLoading} />)}/>
+            <Route path='/admin' render={() => (<Admin toggleLoading={this.toggleLoading} />)}/>
+            <Route path='/profile' render={() => (<Profile toggleLoading={this.toggleLoading} />)}/>
+          </GridList>
           <div className="App-footer"></div>
-        </Grid>
+        </div>
       </div>
     );
   }

@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class DeviceForm extends Component {
 
@@ -15,9 +17,12 @@ class DeviceForm extends Component {
       return '';
     } else {
       return (
-        <form onSubmit={this.props.toggleEditing}>
-          <input type="submit" value="Cancel" className="btn btn-warning"/>
-        </form>
+        <RaisedButton
+          label="Cancel"
+          labelColor={"#ffffff"}
+          backgroundColor={"#ffbf00"}
+          style={{ margin: "5px auto" }}
+          onClick={this.props.toggleEditing} />
       )
     }
   }
@@ -25,28 +30,33 @@ class DeviceForm extends Component {
   button2() {
     if (this.state.isNew) {
       return (
-        <form onSubmit={this.handleAdd}>
-          <input type="submit" value="Add" className="btn btn-success"/>
-        </form>
+        <RaisedButton
+          label="Add"
+          labelColor={"#ffffff"}
+          backgroundColor={"#22cb00"}
+          style={{ margin: "5px auto" }}
+          onClick={this.handleAdd} />
       )
     } else {
       return (
-        <form onSubmit={(event) => this.props.handleUpdate(event, this.state)}>
-          <input type="submit" value="Update" className="btn btn-success"/>
-        </form>
+        <RaisedButton
+          label="Update"
+          labelColor={"#ffffff"}
+          backgroundColor={"#22cb00"}
+          style={{ margin: "5px auto" }}
+          onClick={(event) => this.props.handleUpdate(event, this.state)} />
       )
     }
   }
 
   handleAdd(event) {
     let newItem = this.state;
-    let self = this;
     newItem.type = newItem.type || 'switch';
     newItem.location = newItem.location || 'living-room';
     this.props.handleAdd(event, newItem)
       .then(function() {
-        self.setState(self.props.obj);
-      });
+        this.setState(this.props.obj);
+      }.bind(this));
   }
 
   handleChange(event) {
@@ -61,16 +71,16 @@ class DeviceForm extends Component {
 
   render() {
     return (
-      <tr>
-        <td><input type="text" name="name" placeholder="Name" value={this.state.name} onChange={this.handleChange} required/></td>
-        <td>
+      <TableRow>
+        <TableRowColumn><input type="text" name="name" placeholder="Name" value={this.state.name} onChange={this.handleChange} required/></TableRowColumn>
+        <TableRowColumn>
           <select name="type" value={this.state.type} onChange={this.handleChange} required>
             <option value='switch'>Switch</option>
             <option value='sensor'>Sensor</option>
           </select>
-        </td>
-        <td>
-          <select name="location" value={this.state.location} onChange={this.handleChange} required>
+        </TableRowColumn>
+        <TableRowColumn>
+          <select name="location" value={this.state.location._id} onChange={this.handleChange} required>
             <option value='living-room'>Living Room</option>
             <option value='kitchen'>Kitchen</option>
             <option value='foyer'>Foyer</option>
@@ -81,15 +91,12 @@ class DeviceForm extends Component {
             <option value='kevin-room'>Kevin&#39;s Bedroom</option>
             <option value='kevin-bathroom'>Kevin&#39;s Bathroom</option>
           </select>
-        </td>
-        <td><input type="text" name="localIp" placeholder="Local IP" value={this.state.localIp} onChange={this.handleChange} required/></td>
-        <td className={this.props.obj.status}>{this.props.obj.status.toUpperCase()}</td>
-        <td>{this.props.obj.state && this.props.obj.state.toUpperCase()}</td>
-        <td>{this.props.obj.stalastStatusUpdatete && this.props.obj.lastStatusUpdate}</td>
-        <td>{this.props.obj.lastStateChange && this.props.obj.lastStateChange}</td>
-        <td>{this.button1()}</td>
-        <td>{this.button2()}</td>
-      </tr>
+        </TableRowColumn>
+        <TableRowColumn><input type="text" name="localIp" placeholder="Local IP" value={this.state.localIp} onChange={this.handleChange} required/></TableRowColumn>
+        <TableRowColumn className={this.props.obj.status}>{this.props.obj.status.toUpperCase()}</TableRowColumn>
+        <TableRowColumn>{this.props.obj.state && this.props.obj.state.toUpperCase()}</TableRowColumn>
+        <TableRowColumn>{this.button1()}<br />{this.button2()}</TableRowColumn>
+      </TableRow>
     )
   }
 }

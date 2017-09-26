@@ -2,9 +2,17 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var passport = require('passport');
-var Room = require('../db/models/rooms');
+var decode = require('jwt-decode');
+var Room = require('../db/models/Room');
 
 var isAuthenticated = passport.authenticate('jwt', { session: false });
+
+var isAuthorized = function(auth) {
+  var token = auth.substring(auth.indexOf(' ') + 1);
+  var decoded = token && decode(token);
+
+  return decoded.admin;
+};
 
 router.get('/', isAuthenticated, function(req, res, next) {
   Room.find(function(err, items, count) {
@@ -42,10 +50,20 @@ router.put('/:id', isAuthenticated, function(req, res, next) {
 });
 
 router.delete('/:id', isAuthenticated, function (req, res, next) {
-  Room.remove({ _id: req.params.id }, function (err, item) {
-    if (err) { res.send(err); }
-    res.status(200).send(item);
-  });
+  var authorized = isAuthorized(req.headers.authorization);
+
+  if (authorized) {
+    Room.findById(req.params.id, function(err, item) {
+      if (err) { res.send(err); }
+
+      Room.remove({ _id: item.id }, function (err, result) {
+        if (err) { res.send(err); }
+        res.status(200).send(item);
+      });
+    });
+  } else {
+    res.status(401).send('Unauthorized: Only admins can delete rooms.');
+  }
 });
 
 module.exports = router;

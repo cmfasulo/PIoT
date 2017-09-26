@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+import LogoutIcon from 'material-ui/svg-icons/action/eject';
 import decode from 'jwt-decode';
-import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 import pi from '../../drawables/pi.svg';
 import '../../styles/App.css';
+
+const styles = {
+  color: {
+    primary: "#2196f4",
+    black: "#000000",
+    white: "#ffffff"
+  }
+};
 
 class AppNav extends Component {
 
@@ -12,7 +25,6 @@ class AppNav extends Component {
     super(props);
     this.state = {};
 
-    this.handleClick = this.handleClick.bind(this);
     this.logout = this.logout.bind(this);
   }
 
@@ -21,40 +33,44 @@ class AppNav extends Component {
     let decoded = token && decode(token);
 
     this.setState(decoded);
+    this.setState({ active: this.props.location.pathname });
   }
 
-  handleClick(event) {
-    event.preventDefault();
-    this.props.history.push(event.target.name);
+  navLinks() {
+    return (
+      <IconMenu
+        iconButtonElement={<IconButton><MenuIcon /></IconButton>}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+      >
+        <MenuItem primaryText="Dashboard" containerElement={<Link to="/" />} />
+        <MenuItem primaryText="Profile" containerElement={<Link to="/profile" />} />
+        { this.state.admin && (
+        <MenuItem primaryText="Admin" containerElement={<Link to="/admin" />} />
+        )}
+        <MenuItem primaryText="Sign out" leftIcon={<LogoutIcon />} onClick={this.logout} />
+      </IconMenu>
+    )
   }
 
-  logout(event) {
-    event.preventDefault();
+  logout() {
     localStorage.removeItem('jwtPIoT');
     this.props.history.push('/login');
   }
 
   render() {
     return (
-      <Navbar inverse collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <img src={pi} className="d-inline-block align-top nav-logo" alt="PIoT" />
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            <NavItem eventKey={1} name="/" onClick={this.handleClick}>PIoT</NavItem>
-          </Nav>
-          <Nav pullRight>
-            <NavItem eventKey={1} name="/" onClick={this.handleClick}>Dashboard</NavItem>
-            <NavItem eventKey={2} name="/admin" onClick={this.handleClick}>Admin</NavItem>
-            <NavItem eventKey={3} name="/profile" onClick={this.handleClick}>Profile</NavItem>
-            <NavItem eventKey={4} onClick={this.logout}>Logout</NavItem>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
+      <AppBar
+        title="PIoT"
+        iconElementLeft={<img src={pi} className="nav-logo" alt="PIoT" />}
+        iconStyleLeft={{}}
+        iconElementRight={this.navLinks()}
+        style={{
+          backgroundColor: styles.color.black,
+          maxHeight: "75px",
+          alignItems: "center"
+        }}
+      />
     );
   }
 }

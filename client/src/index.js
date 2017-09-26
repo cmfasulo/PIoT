@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import decode from 'jwt-decode';
 
 import './styles/index.css';
@@ -38,10 +39,12 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 ReactDOM.render(
   <Router>
-    <Switch>
-      <Route exact path='/login' component={Login} />
-      <PrivateRoute path="/" component={App} />
-    </Switch>
+    <MuiThemeProvider>
+      <Switch>
+        <Route exact path='/login' component={Login} />
+        <PrivateRoute path="/" component={App} />
+      </Switch>
+    </MuiThemeProvider>
   </Router>,
   document.getElementById('root')
 );

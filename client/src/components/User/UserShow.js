@@ -1,27 +1,32 @@
 import React, { Component } from 'react';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class UserShow extends Component {
 
   render() {
     return (
-      <tr>
-        <td>{this.props.obj.firstName}</td>
-        <td>{this.props.obj.lastName}</td>
-        <td>{this.props.obj.username}</td>
-        <td>{this.props.obj.permissions}</td>
-        <td> - </td>
-        <td> - </td>
-        <td>
-          <form onSubmit={this.props.toggleEditing}>
-            <input type="submit" value="Edit" className="btn btn-primary"/>
-          </form>
-        </td>
-        <td>
-          <form onSubmit={this.props.handleDelete}>
-            <input type="submit" value="Delete" className="btn btn-danger"/>
-          </form>
-        </td>
-      </tr>
+      <TableRow>
+        <TableRowColumn>{this.props.obj.firstName}</TableRowColumn>
+        <TableRowColumn>{this.props.obj.lastName}</TableRowColumn>
+        <TableRowColumn>{this.props.obj.username}</TableRowColumn>
+        <TableRowColumn>{this.props.obj.permissions && this.props.obj.permissions.length ? this.props.obj.permissions.join(', ') : 'None'}</TableRowColumn>
+        <TableRowColumn>
+          <RaisedButton
+            label="Edit"
+            labelColor={"#ffffff"}
+            backgroundColor={"#006eff"}
+            style={{ margin: "5px auto" }}
+            onClick={this.props.toggleEditing} />
+          <br />
+          <RaisedButton
+            label="Delete"
+            labelColor={"#ffffff"}
+            backgroundColor={"#ff0000"}
+            style={{ margin: "5px auto" }}
+            onClick={this.props.handleDelete} />
+        </TableRowColumn>
+      </TableRow>
     )
   }
 }

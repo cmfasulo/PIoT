@@ -1,7 +1,7 @@
 let roomList = {
   listName: 'Rooms',
   endpoint: '/rooms/',
-  headerLabels: ['_id', 'Name'],
+  headerLabels: ['_id', 'Name', 'Action'],
   fields: {
     name: ''
   }

@@ -18,6 +18,7 @@ router.post('/login', function(req, res, next) {
           if (isMatch && !err) {
             var token = jwt.sign({
               id: user._id,
+              username: user.username,
               admin: user.admin,
               permissions: user.permissions,
               },
@@ -26,7 +27,7 @@ router.post('/login', function(req, res, next) {
             );
             res.status(200).send({ message: 'Login Successful.', token: token});
           } else {
-            res.status(400).send({ message: 'Authentication failed. Invalid Username/Password.' });
+            res.status(400).send({ message: 'Invalid Username/Password.' });
           }
         });
       }

@@ -62,30 +62,39 @@ class Row extends Component {
 
   handleUpdate(event, updatedState) {
     event.preventDefault();
-    let self = this;
     let item = updatedState || this.state;
     delete item.isForm;
 
     this.props.updateItem(item)
       .then(function(updatedItem) {
-        self.setState(updatedItem);
-      });
+        if (updatedItem) {
+          this.setState(updatedItem);
+        }
+      }.bind(this));
+  }
+
+  pingDevice(event, deviceId) {
+
+    this.props.pingDevice(event, deviceId)
+      .then(function(updatedDevice) {
+        this.setState(updatedDevice);
+      }.bind(this));
   }
 
   formRow() {
     let FormComponent = this.components.form[this.props.listName.slice(0, -1)];
 
     if (this.state.isNew) {
-      return <FormComponent obj={this.state} handleAdd={this.handleAdd.bind(this)} />;
+      return <FormComponent obj={this.state} dashboard={this.dashboard} handleAdd={this.handleAdd.bind(this)} />;
     } else {
-      return <FormComponent obj={this.state} toggleEditing={this.toggleEditing.bind(this)} handleUpdate={this.handleUpdate.bind(this)} />;
+      return <FormComponent obj={this.state} dashboard={this.dashboard} toggleEditing={this.toggleEditing.bind(this)} handleUpdate={this.handleUpdate.bind(this)} />;
     }
   }
 
   showRow() {
     let ShowComponent = this.components.show[this.props.listName.slice(0, -1)];
 
-    return <ShowComponent obj={this.state} dashboard={this.dashboard} toggleState={this.toggleState.bind(this)} toggleEditing={this.toggleEditing.bind(this)} handleDelete={this.handleDelete.bind(this)} />;
+    return <ShowComponent obj={this.state} dashboard={this.dashboard} toggleState={this.toggleState.bind(this)} toggleEditing={this.toggleEditing.bind(this)} handleDelete={this.handleDelete.bind(this)} pingDevice={this.pingDevice.bind(this)} />;
   }
 
   render() {

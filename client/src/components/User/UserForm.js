@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import RaisedButton from 'material-ui/RaisedButton';
 import axios from '../../axios';
 
 class UserForm extends Component {
 
   constructor(props) {
     super(props);
+    props.obj.rooms = [];
+    props.obj.passwordConfirm = '';
     this.state = props.obj || {};
-    this.rooms = [];
 
     this.updatePermissions = this.updatePermissions.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
@@ -15,16 +18,26 @@ class UserForm extends Component {
 
   componentWillMount() {
     axios.get('/rooms/', { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
-      .then(response => {
-        this.rooms = response.data;
-      })
+      .then(function(response) {
+        this.setState({ rooms: response.data });
+      }.bind(this))
       .catch(function (error) {
         console.log(error);
-      })
+      });
   }
 
   updatePermissions(event) {
-    console.log('permissions event: ', event);
+    let target = event.target;
+    let state = this.state;
+
+    if (target.value === 'on' && state.permissions.indexOf(target.name) === -1) {
+      state.permissions.push(target.name);
+    } else {
+      let index = state.permissions.indexOf(target.name);
+      state.permissions.splice(index, 1);
+    }
+
+    this.setState(state);
   }
 
   button1() {
@@ -32,9 +45,12 @@ class UserForm extends Component {
       return '';
     } else {
       return (
-        <form onSubmit={this.props.toggleEditing}>
-          <input type="submit" value="Cancel" className="btn btn-warning"/>
-        </form>
+        <RaisedButton
+          label="Cancel"
+          labelColor={"#ffffff"}
+          backgroundColor={"#ffbf00"}
+          style={{ margin: "5px auto" }}
+          onClick={this.props.toggleEditing} />
       )
     }
   }
@@ -42,34 +58,44 @@ class UserForm extends Component {
   button2() {
     if (this.state.isNew) {
       return (
-        <form onSubmit={this.handleAdd}>
-          <input type="submit" value="Add" className="btn btn-success"/>
-        </form>
+        <RaisedButton
+          label="Add"
+          labelColor={"#ffffff"}
+          backgroundColor={"#22cb00"}
+          style={{ margin: "5px auto" }}
+          onClick={this.handleAdd} />
       )
     } else {
       return (
-        <form onSubmit={(event) => this.props.handleUpdate(event, this.state)}>
-          <input type="submit" value="Update" className="btn btn-success"/>
-        </form>
+        <RaisedButton
+          label="Update"
+          labelColor={"#ffffff"}
+          backgroundColor={"#22cb00"}
+          style={{ margin: "5px auto" }}
+          onClick={(event) => this.props.handleUpdate(event, this.state)} />
       )
     }
   }
 
   handleAdd(event) {
-    let newItem = this.state;
-    newItem.permissions = newItem.permissions || [];
+    if (this.state.password === this.state.passwordConfirm) {
+      let newItem = this.state;
+      newItem.permissions = newItem.permissions || [];
 
-    this.props.handleAdd(event, newItem)
-      .then(function() {
-        this.setState(this.props.obj);
-      }.bind(this));
+      this.props.handleAdd(event, newItem)
+        .then(function() {
+          this.setState(this.props.obj);
+        }.bind(this));
+    } else {
+      event.prevenTableRowColumnefault();
+      alert('Invalid: Passwords do not match.');
+    }
   }
 
   handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    console.log('handleChange event: ', event);
 
     this.setState({
       [name]: value
@@ -78,28 +104,25 @@ class UserForm extends Component {
 
   render() {
     return (
-      <tr>
-        <td><input type="text" name="firstName" placeholder="First Name" value={this.state.firstName} onChange={this.handleChange} required/></td>
-        <td><input type="text" name="lastName" placeholder="Last Name" value={this.state.lastName} onChange={this.handleChange} required/></td>
-        <td><input type="text" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} required/></td>
-        <td>
-        { this.rooms.length ? (
-          <ul>
-          {this.rooms.map((room, i) => (
-            <li key={i}>
-            <input type="checkbox" value={room.id} onChange={this.updatePermissions}/>{room.name}
-            </li>
-          )).bind(this)}
-          </ul>
-        ) : (
-          <p>No rooms founds.</p>
-        )}
-        </td>
-        <td><input type="password" name="password" placeholder="Password" value={this.state.password} onChange={this.handleChange} required/></td>
-        <td><input type="password" name="passwordConfirm" placeholder="Confirm Password" value={this.state.passwordConfirm} onChange={this.handleChange} required/></td>
-        <td>{this.button1()}</td>
-        <td>{this.button2()}</td>
-      </tr>
+      <TableRow>
+        <TableRowColumn><input type="text" name="firstName" placeholder="First Name" value={this.state.firstName} onChange={this.handleChange} required/></TableRowColumn>
+        <TableRowColumn><input type="text" name="lastName" placeholder="Last Name" value={this.state.lastName} onChange={this.handleChange} required/></TableRowColumn>
+        <TableRowColumn><input type="text" name="username" placeholder="Username" value={this.state.username} onChange={this.handleChange} required/></TableRowColumn>
+        <TableRowColumn>
+        {!this.props.dashboard ? (
+            <ul className="room-list">
+            {this.state.rooms.map((room, i) => (
+              <li key={i}>
+                <input type="checkbox" name={room._id} checked={this.state.permissions.indexOf(room._id) !== -1} onChange={this.updatePermissions}/> {room.name}
+              </li>
+            ))}
+            </ul>
+          ) : (
+            <p>{this.props.obj.permissions.length ? this.props.obj.permissions.join(', ') : 'None'}</p>
+          )}
+        </TableRowColumn>
+        <TableRowColumn>{this.button1()}<br />{this.button2()}</TableRowColumn>
+      </TableRow>
     )
   }
 }

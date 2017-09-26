@@ -3,7 +3,7 @@
   "name": "PIoT Server Admin App",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "pi.ico",
       "sizes": "192x192",
       "type": "image/png"
     }

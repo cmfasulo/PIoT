@@ -5,7 +5,7 @@ let instance = axios.create({
 });
 
 instance.interceptors.response.use(undefined, function (err) {
-  if (err.response.status === 401 && err.response.statusText === 'Unauthorized') {
+  if (err.response.status === 401 && err.response.statusText === 'Unauthorized' && !err.response.data) {
     window.location.replace('/login');
   }
 });

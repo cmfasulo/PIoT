@@ -5,11 +5,12 @@
   "dependencies": {
     "axios": "^0.16.2",
     "jwt-decode": "^2.2.0",
+    "material-ui": "^0.19.2",
     "react": "^15.6.1",
-    "react-bootstrap": "^0.31.3",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.12",
+    "react-spinners": "^0.1.3",
     "serve-favicon": "~2.4.2"
   },
   "scripts": {

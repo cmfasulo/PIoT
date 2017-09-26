@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from '../../axios';
-import { Table } from 'react-bootstrap';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table';
 import Row from './Row';
 
 class List extends Component {
@@ -18,7 +18,8 @@ class List extends Component {
   componentWillMount() {
     axios.get(this.endpoint, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
     .then(response => {
-      this.setState({ items: response.data });
+      let items = response.data && Array.isArray(response.data) ? response.data : [response.data];
+      this.setState({ items: items });
     })
     .catch(function (error) {
       console.log(error);
@@ -26,63 +27,90 @@ class List extends Component {
   }
 
   addItem(item) {
-    let self = this;
+    this.props.toggleLoading(true);
     return axios.post(this.endpoint, item, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        self.setState({
-          items: self.state.items.concat([response.data])
+        this.setState({
+          items: this.state.items.concat([response.data && response.data])
         });
-      })
+        this.props.toggleLoading(false);
+      }.bind(this))
       .catch(function(error) {
+        this.props.toggleLoading(false);
         console.log(error);
-      });
+      }.bind(this));
   }
 
   updateItem(item) {
-    let self = this;
+    this.props.toggleLoading(true);
     return axios.put(this.endpoint+ item._id, item, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        let items = self.state.items;
+        let items = this.state.items;
         let index = items.findIndex(x => x._id === response.data._id);
         items[index] = response.data;
-        self.setState({ items: items });
+        this.setState({ items: items });
+        this.props.toggleLoading(false);
         return response.data;
-      })
+      }.bind(this))
       .catch(function(error) {
         console.log(error);
-      });
+        this.props.toggleLoading(false);
+      }.bind(this));
   }
 
   deleteItem(id) {
-    let self = this;
+    this.props.toggleLoading(true);
     return axios.delete(this.endpoint + id, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        let items = self.state.items.filter(function(item) {
-          return item._id !== response.data._id;
-        });
+        console.log('deleteItem response: ', response);
+        if (response && response.data) {
+          let items = this.state.items.filter(function(item) {
+            return item._id !== response.data._id;
+          });
 
-        self.setState({ items: items });
-      })
+          this.setState({ items: items });
+          this.props.toggleLoading(false);
+        }
+      }.bind(this))
       .catch(function(err) {
         console.log(err);
-      });
+        this.props.toggleLoading(false);
+      }.bind(this));
+  }
+
+  pingDevice(event, deviceId) {
+    event.preventDefault();
+    this.props.toggleLoading(true);
+
+    return axios.get('/devices/ping/' + deviceId, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
+      .then(function(response) {
+        let items = this.state.items;
+        let index = items.findIndex(x => x._id === response.data._id);
+        items[index] = response.data;
+        this.setState({ items: items });
+        this.props.toggleLoading(false);
+        return response.data;
+      }.bind(this))
+      .catch(function (error) {
+        console.log(error);
+        this.props.toggleLoading(false);
+      }.bind(this))
   }
 
   headerRow() {
-    if(this.headerLabels instanceof Array){
-      return this.headerLabels.map(function(object, i){
-        return <td key={i}>{object}</td>;
+    if (this.headerLabels instanceof Array) {
+      return this.headerLabels.map(function(object, i) {
+        return <TableHeaderColumn key={i}>{object}</TableHeaderColumn>;
       });
     }
   }
 
   dataRow() {
-    let self = this;
-    if(this.state.items instanceof Array){
-      return this.state.items.map(function(object, i){
+    if (this.state.items instanceof Array) {
+      return this.state.items.map(function(object, i) {
         object.isForm = false;
-        return <Row listName={self.listName} dashboard={self.dashboard} obj={object} key={i} deleteItem={self.deleteItem.bind(self)} updateItem={self.updateItem.bind(self)} />;
-      });
+        return <Row listName={this.listName} dashboard={this.dashboard} obj={object} key={i} deleteItem={this.deleteItem.bind(this)} updateItem={this.updateItem.bind(this)} pingDevice={this.pingDevice.bind(this)} />;
+      }.bind(this));
     }
   }
 
@@ -90,26 +118,21 @@ class List extends Component {
     let formState = this.fields;
     formState.isNew = true;
     formState.isForm = true;
-    return <Row listName={this.listName} obj={formState} addItem={this.addItem.bind(this)} />;
+    return <Row listName={this.listName} obj={formState} dashboard={this.dashboard} addItem={this.addItem.bind(this)} />;
   }
 
   render() {
     return (
-      <div className="container">
-        <h3>{this.listName}</h3>
-        <Table striped condensed hover className={this.listName}>
-          <thead>
-            <tr>
-              {this.headerRow()}
-            </tr>
-          </thead>
-          <tbody>
-            {this.dataRow()}
-            {!this.dashboard && this.newRow()}
-          </tbody>
-        </Table>
-        <hr/>
-      </div>
+      <Table style={{ width: "100%", overflow: "auto" }}>
+        <TableHeader displaySelectAll={false} adjustForCheckbox={false} >
+          <TableRow>
+            {this.headerRow()}
+          </TableRow>
+        </TableHeader>
+        <TableBody showRowHover={true} stripedRows={true} >
+          {this.dataRow()}
+        </TableBody>
+      </Table>
     );
   }
 }

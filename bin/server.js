@@ -14,6 +14,7 @@ var config = require('../config');
 var login = require('./api/login');
 var users = require('./api/users');
 var devices = require('./api/devices');
+var rooms = require('./api/rooms');
 
 var app = express();
 
@@ -48,6 +49,7 @@ app.get('/', function (req, res) {
 app.use('/', login);
 app.use('/users', users);
 app.use('/devices', devices);
+app.use('/rooms', rooms);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

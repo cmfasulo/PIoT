@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import { TableRow, TableRowColumn } from 'material-ui/Table';
+import RaisedButton from 'material-ui/RaisedButton';
 
 class RoomForm extends Component {
 
   constructor(props) {
     super(props);
+    props.obj._id = props.obj._id || '';
     this.state = props.obj || {};
 
     this.handleAdd = this.handleAdd.bind(this);
@@ -15,9 +18,12 @@ class RoomForm extends Component {
       return '';
     } else {
       return (
-        <form onSubmit={this.props.toggleEditing}>
-          <input type="submit" value="Cancel" className="btn btn-warning"/>
-        </form>
+        <RaisedButton
+          label="Cancel"
+          labelColor={"#ffffff"}
+          backgroundColor={"#ffbf00"}
+          style={{ margin: "5px auto" }}
+          onClick={this.props.toggleEditing} />
       )
     }
   }
@@ -25,15 +31,21 @@ class RoomForm extends Component {
   button2() {
     if (this.state.isNew) {
       return (
-        <form onSubmit={this.handleAdd}>
-          <input type="submit" value="Add" className="btn btn-success"/>
-        </form>
+        <RaisedButton
+          label="Add"
+          labelColor={"#ffffff"}
+          backgroundColor={"#22cb00"}
+          style={{ margin: "5px auto" }}
+          onClick={this.handleAdd} />
       )
     } else {
       return (
-        <form onSubmit={(event) => this.props.handleUpdate(event, this.state)}>
-          <input type="submit" value="Update" className="btn btn-success"/>
-        </form>
+        <RaisedButton
+          label="Update"
+          labelColor={"#ffffff"}
+          backgroundColor={"#22cb00"}
+          style={{ margin: "5px auto" }}
+          onClick={(event) => this.props.handleUpdate(event, this.state)} />
       )
     }
   }
@@ -59,12 +71,19 @@ class RoomForm extends Component {
 
   render() {
     return (
-      <tr>
-        <td>{this.props.obj._id}</td>
-        <td><input type="text" name="name" placeholder="Name" value={this.state.name} onChange={this.handleChange} required/></td>
-        <td>{this.button1()}</td>
-        <td>{this.button2()}</td>
-      </tr>
+      <TableRow>
+        {this.state.isNew ? (
+          <TableRowColumn>
+            <input type="text" name="_id" placeholder="ID" value={this.state._id} onChange={this.handleChange} required/>
+          </TableRowColumn>
+        ) : (
+          <TableRowColumn>{this.props.obj._id}</TableRowColumn>
+        )}
+        <TableRowColumn>
+          <input type="text" name="name" placeholder="Name" value={this.state.name} onChange={this.handleChange} required/>
+        </TableRowColumn>
+        <TableRowColumn>{this.button1()}<br />{this.button2()}</TableRowColumn>
+      </TableRow>
     )
   }
 }
