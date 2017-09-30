@@ -10,21 +10,29 @@ body {
 }
 
 table {
-  table-layout: fixed;
   word-wrap: break-word;
 }
 
-input, select {
-  max-width: 100%;
+th, td {
+  text-align: center !important;
+  white-space: normal !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
 }
 
-td {
-  vertical-align: middle !important;
+#root {
+  min-height: 100%;
 }
 
-.container-fluid {
-  padding-left: 0;
-  padding-right: 0;
+.loading {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 8;
 }
 
 .App {
@@ -54,30 +62,21 @@ td {
 .App-footer {
   position: fixed;
   bottom: 0;
-  height: 25px;
+  height: 15px;
   width: 100%;
   overflow: hidden;
 }
 
-.App-intro {
-  font-size: large;
+.nav-logo {
+  border-radius: 30%;
+  box-shadow: 0 0 0 rgba(33,150,244, 0.4);
+  padding: 10px;
+  max-height: 50px;
+  animation: pulse infinite 2s;
 }
 
-#root {
-  min-height: 100%;
-}
-
-.row {
-  margin: auto 0;
-}
-
-.login, .signup {
-  text-align: center;
-}
-
-.login > input, .signup > input {
-  display: block;
-  margin: 0 auto 20px auto;
+.table-left > tbody > tr > td {
+  text-align: left !important;
 }
 
 .online {
@@ -90,62 +89,13 @@ td {
   font-weight: bold;
 }
 
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+.form-fields {
+  width: 100%;
 }
 
-/* Hide default HTML checkbox */
-.switch input {display:none;}
-
-/* The slider */
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #2196F3;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
+.form-buttons {
+  width: 100%;
+  text-align: center;
 }
 
 @keyframes pulse {

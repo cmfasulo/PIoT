@@ -3,10 +3,9 @@ import { withRouter } from 'react-router-dom';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import decode from 'jwt-decode';
 
-import List from './util/List';
-import userList from '../props/userList';
-import deviceList from '../props/deviceList';
-import roomList from '../props/roomList';
+import Users from './Users';
+import Devices from './Devices';
+import Rooms from './Rooms';
 
 const styles = {
   color: {
@@ -43,21 +42,19 @@ class Admin extends Component {
    }
 
   render() {
-    userList.dashboard = false;
-
     return this.state.admin ? (
       <Tabs
         inkBarStyle={{ background: styles.color.black }}
         tabItemContainerStyle={{ backgroundColor: styles.color.primary}}
       >
         <Tab label="Users" >
-          <List {...userList} toggleLoading={this.props.toggleLoading}></List>
+          <Users toggleLoading={this.props.toggleLoading} />
         </Tab>
         <Tab label="Devices" >
-          <List {...deviceList} toggleLoading={this.props.toggleLoading}></List>
+          <Devices toggleLoading={this.props.toggleLoading} />
         </Tab>
         <Tab label="Rooms" >
-          <List {...roomList} toggleLoading={this.props.toggleLoading}></List>
+          <Rooms toggleLoading={this.props.toggleLoading} />
         </Tab>
       </Tabs>
     ) : null;

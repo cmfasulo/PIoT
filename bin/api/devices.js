@@ -39,7 +39,7 @@ router.post('/', function(req, res, next) {
   newItem.save(function(err, item) {
     if (err) { res.send(err); }
 
-    Device.findById(item._id).populate('location').exec(function(err, item) {
+    item.populate('location', function(err) {
       if (err) { res.send(err); }
       res.status(200).send(item);
     });
@@ -57,7 +57,7 @@ router.put('/:id', function(req, res, next) {
   Device.findById(req.body._id, function(err, item) {
     if (err) { res.send(err); }
 
-    if (req.body.state !== item.state) {
+    if (req.body.state && req.body.state !== item.state) {
       axios.get('http://' + req.body.localIp + '/' + req.body.state, { timeout: 3000 })
       .then(function (response) {
 
@@ -72,9 +72,9 @@ router.put('/:id', function(req, res, next) {
         item.save(function (err, updatedItem) {
           if (err) { res.send(err); }
 
-          Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+          updatedItem.populate('location', function(err) {
             if (err) { res.send(err); }
-            res.status(200).send(item);
+            res.status(200).send(updatedItem);
           });
         });
       })
@@ -84,9 +84,9 @@ router.put('/:id', function(req, res, next) {
         item.save(function (err, updatedItem) {
           if (err) { res.send(err); }
 
-          Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+          updatedItem.populate('location', function(err) {
             if (err) { res.send(err); }
-            res.status(200).send(item);
+            res.status(200).send(updatedItem);
           });
         });
       });
@@ -99,9 +99,9 @@ router.put('/:id', function(req, res, next) {
       item.save(function (err, updatedItem) {
         if (err) { res.send(err); }
 
-        Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+        updatedItem.populate('location', function(err) {
           if (err) { res.send(err); }
-          res.status(200).send(item);
+          res.status(200).send(updatedItem);
         });
       });
     }
@@ -126,9 +126,9 @@ router.get('/ping/:id', function(req, res, next) {
       item.save(function (err, updatedItem) {
         if (err) { res.send(err); }
 
-        Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+        updatedItem.populate('location', function(err) {
           if (err) { res.send(err); }
-          res.status(200).send(item);
+          res.status(200).send(updatedItem);
         });
       });
     })
@@ -139,9 +139,9 @@ router.get('/ping/:id', function(req, res, next) {
       item.save(function (err, updatedItem) {
         if (err) { res.send(err); }
 
-        Device.findById(updatedItem._id).populate('location').exec(function(err, item) {
+        updatedItem.populate('location', function(err) {
           if (err) { res.send(err); }
-          res.status(200).send(item);
+          res.status(200).send(updatedItem);
         });
       });
     });

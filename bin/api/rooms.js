@@ -41,8 +41,12 @@ router.put('/:id', isAuthenticated, function(req, res, next) {
   Room.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
 
-    Room = req.body;
-    Room.save(function(err, item) {
+    var keys = Object.keys(req.body);
+    keys.forEach(function(key) {
+      item[key] = req.body[key];
+    });
+
+    item.save(function(err, item) {
       if (err) { res.send(err); }
       res.status(200).send(item);
     });

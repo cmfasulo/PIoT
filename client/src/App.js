@@ -5,10 +5,11 @@ import './styles/App.css';
 
 import { BeatLoader } from 'react-spinners';
 import AppNav from './components/util/AppNav';
+import Dashboard from './components/Dashboard';
 import Admin from './components/Admin';
 import Profile from './components/Profile';
-import List from './components/util/List';
-import dashboardDevices from './props/dashboardDevices';
+// import List from './components/util/List';
+// import dashboardDevices from './props/dashboardDevices';
 
 const styles = {
   root: {
@@ -59,7 +60,7 @@ class App extends Component {
             padding={0}
             style={styles.gridList}
           >
-            <Route exact path='/' render={() => (<List {...dashboardDevices} toggleLoading={this.toggleLoading} />)}/>
+            <Route exact path='/' render={() => (<Dashboard toggleLoading={this.toggleLoading} />)}/>
             <Route path='/admin' render={() => (<Admin toggleLoading={this.toggleLoading} />)}/>
             <Route path='/profile' render={() => (<Profile toggleLoading={this.toggleLoading} />)}/>
           </GridList>
