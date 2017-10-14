@@ -8,7 +8,7 @@ Start node server:
 ```npm start```
 
 Start React dev server:
-```npm run react```
+```cd client && npm start```
 
 ## TODOs
 Client:

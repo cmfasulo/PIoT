@@ -12,24 +12,16 @@
     "cors": "^2.8.4",
     "debug": "~2.6.3",
     "express": "~4.15.2",
-    "express-session": "^1.15.5",
-    "express-validator": "^4.2.1",
     "forever": "^0.15.3",
-    "jade": "~1.11.0",
     "jsonwebtoken": "^8.0.1",
     "jwt-decode": "^2.2.0",
     "mongoose": "^4.11.8",
     "morgan": "~1.8.1",
     "passport": "^0.4.0",
-    "passport-jwt": "^3.0.0",
-    "passport-local": "^1.0.0",
-    "passport-local-mongoose": "^4.2.1"
+    "passport-jwt": "^3.0.0"
   },
   "scripts": {
-    "start": "nodemon ./bin/www --watch ./bin",
-    "forever": "forever start ./bin/www",
-    "react": "client/node_modules/react-scripts/bin/react-scripts.js start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "start": "nodemon ./www",
+    "forever": "forever start ./www"
   }
 }
