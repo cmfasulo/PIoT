@@ -18,6 +18,11 @@ class UserForm extends Form {
       passwordConfirm: ''
     });
 
+    if (props.obj && props.obj._id) {
+      delete this.state.password;
+      delete this.state.passwordConfirm;
+    }
+
     this.updatePermissions = this.updatePermissions.bind(this);
   }
 
@@ -35,6 +40,29 @@ class UserForm extends Form {
     this.setState({ permissions: permissions });
   }
 
+  validations(err) {
+    if (this.state.password || this.state.passwordConfirm) {
+      if (this.state.password !== this.state.passwordConfirm) {
+        err.error = true;
+        err.errorMessage.passwordConfirm = 'Passwords do not match.';
+      }
+    }
+
+    let required = ['firstName', 'lastName', 'username'];
+    if (Object.keys(this.state).indexOf('password') !== -1) {
+      required.push('password', 'passwordConfirm');
+    }
+
+    required.forEach((field) => {
+      if (!this.state[field]) {
+        err.error = true;
+        err.errorMessage[field] = 'This field is required.';
+      }
+    });
+
+    return err;
+  }
+
   formFields() {
     return (
       <div className="form-fields">
@@ -47,6 +75,7 @@ class UserForm extends Form {
           value={this.state.firstName}
           style={{ width: "100%" }}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage.firstName || ''}
         />
 
         <TextField
@@ -58,6 +87,7 @@ class UserForm extends Form {
           value={this.state.lastName}
           style={{ width: "100%" }}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage.lastName || ''}
         />
 
         <TextField
@@ -69,6 +99,7 @@ class UserForm extends Form {
           value={this.state.username}
           style={{ width: "100%" }}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage.username || ''}
         />
 
         <div>
@@ -98,6 +129,7 @@ class UserForm extends Form {
             defaultValue=""
             style={{ width: "100%" }}
             onChange={this.handleChange}
+            errorText={this.state.errorMessage.password || ''}
           />
         )}
 
@@ -112,6 +144,7 @@ class UserForm extends Form {
             defaultValue=""
             style={{ width: "100%" }}
             onChange={this.handleChange}
+            errorText={this.state.errorMessage.passwordConfirm || ''}
           />
         )}
       </div>

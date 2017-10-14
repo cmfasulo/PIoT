@@ -33,6 +33,8 @@ class CollectionTable extends Component {
       dialog: false,
       dialogExtras: {},
       confirmDelete: false,
+      error: false,
+      errorMessage: '',
       items: ''
     };
 
@@ -48,6 +50,7 @@ class CollectionTable extends Component {
     this.dialogTitle = this.dialogTitle.bind(this);
     this.confirmDeleteActions = this.confirmDeleteActions.bind(this);
     this.toggleConfirmDelete = this.toggleConfirmDelete.bind(this);
+    this.toggleError = this.toggleError.bind(this);
   }
 
   componentWillMount() {
@@ -86,13 +89,17 @@ class CollectionTable extends Component {
 
     axios.post(this.endpoint, item, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        this.setState({ items: this.state.items.concat([response.data && response.data]) });
-        this.props.toggleLoading(false);
-        this.toggleDialog();
+        if (response.data.errors || response.data.code === 11000) {
+          throw response.data;
+        } else {
+          this.setState({ items: this.state.items.concat([response.data && response.data]) });
+          this.props.toggleLoading(false);
+          this.toggleDialog();
+        }
       }.bind(this))
       .catch(function(error) {
         this.props.toggleLoading(false);
-        this.toggleDialog();
+        this.toggleError(error);
         console.log(error);
       }.bind(this));
   }
@@ -108,17 +115,21 @@ class CollectionTable extends Component {
 
     axios.put(this.endpoint + item._id, item, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        let items = this.state.items;
-        let index = items.findIndex(x => x._id === response.data._id);
-        items[index] = response.data;
-        this.setState({ items: items });
-        this.props.toggleLoading(false);
-        this.toggleDialog();
+        if (response.data.errors) {
+          throw response.data;
+        } else {
+          let items = this.state.items;
+          let index = items.findIndex(x => x._id === response.data._id);
+          items[index] = response.data;
+          this.setState({ items: items });
+          this.props.toggleLoading(false);
+          this.toggleDialog();
+        }
       }.bind(this))
       .catch(function(error) {
-        console.log(error);
         this.props.toggleLoading(false);
-        this.toggleDialog();
+        this.toggleError(error);
+        console.log(error);
       }.bind(this));
   }
 
@@ -127,22 +138,26 @@ class CollectionTable extends Component {
 
     axios.delete(this.endpoint + id, { headers: { Authorization: localStorage.getItem('jwtPIoT') } })
       .then(function(response) {
-        if (response && response.data) {
-          let items = this.state.items.filter(function(item) {
-            return item._id !== response.data._id;
-          });
+        if (response.data.errors) {
+          throw response.data;
+        } else {
+          if (response && response.data) {
+            let items = this.state.items.filter(function(item) {
+              return item._id !== response.data._id;
+            });
 
-          this.setState({ items: items });
-          this.props.toggleLoading(false);
-          this.toggleConfirmDelete();
-          this.toggleDialog();
+            this.setState({ items: items });
+            this.props.toggleLoading(false);
+            this.toggleConfirmDelete();
+            this.toggleDialog();
+          }
         }
       }.bind(this))
-      .catch(function(err) {
-        console.log(err);
+      .catch(function(error) {
+        console.log(error);
         this.props.toggleLoading(false);
         this.toggleConfirmDelete();
-        this.toggleDialog();
+        this.toggleError(error);
       }.bind(this));
   }
 
@@ -210,8 +225,25 @@ class CollectionTable extends Component {
     return actions;
   }
 
+  errorActions() {
+    const actions = [
+      <FlatButton
+        label="Darn, Okay..."
+        labelStyle={{ color: styles.color.black }}
+        primary={true}
+        onClick={this.toggleError}
+      />
+    ];
+
+    return actions;
+  }
+
   toggleConfirmDelete() {
     this.setState({ confirmDelete: !this.state.confirmDelete });
+  }
+
+  toggleError(err) {
+    this.setState({ error: !this.state.error, errorMessage: JSON.stringify(err.message || err.errmsg) });
   }
 
   render() {
@@ -223,6 +255,7 @@ class CollectionTable extends Component {
     confirmDeleteTitle += title ? "'" + title + "' ?" : "this item?";
 
     let deleteActions = this.confirmDeleteActions();
+    let errorActions = this.errorActions();
 
     return (
       <div>
@@ -277,6 +310,15 @@ class CollectionTable extends Component {
               actions={deleteActions}
               autoScrollBodyContent={true}
             />
+            <Dialog
+              title="Error Processing Request:"
+              modal={true}
+              open={this.state.error || false}
+              actions={errorActions}
+              autoScrollBodyContent={true}
+            >
+              {this.state.errorMessage}
+            </Dialog>
           </Dialog>
         )}
       </div>

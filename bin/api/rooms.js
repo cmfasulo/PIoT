@@ -1,34 +1,24 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var passport = require('passport');
-var decode = require('jwt-decode');
+var routerHelpers = require('../routerHelpers');
 var Room = require('../db/models/Room');
 
-var isAuthenticated = passport.authenticate('jwt', { session: false });
-
-var isAuthorized = function(auth) {
-  var token = auth.substring(auth.indexOf(' ') + 1);
-  var decoded = token && decode(token);
-
-  return decoded.admin;
-};
-
-router.get('/', isAuthenticated, function(req, res, next) {
+router.get('/', routerHelpers.isAuthenticated, function(req, res, next) {
   Room.find(function(err, items, count) {
     if (err) { res.send(err); }
     res.status(200).send(items);
   });
 });
 
-router.get('/:id', isAuthenticated, function(req, res, next) {
+router.get('/:id', routerHelpers.isAuthenticated, function(req, res, next) {
   Room.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
     res.status(200).send(item);
   });
 });
 
-router.post('/', isAuthenticated, function(req, res, next) {
+router.post('/', routerHelpers.isAuthenticated, function(req, res, next) {
   var newRoom = new Room(req.body);
 
   newRoom.save(function(err, item) {
@@ -37,7 +27,7 @@ router.post('/', isAuthenticated, function(req, res, next) {
   })
 });
 
-router.put('/:id', isAuthenticated, function(req, res, next) {
+router.put('/:id', routerHelpers.isAuthenticated, function(req, res, next) {
   Room.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
 
@@ -53,10 +43,10 @@ router.put('/:id', isAuthenticated, function(req, res, next) {
   });
 });
 
-router.delete('/:id', isAuthenticated, function (req, res, next) {
-  var authorized = isAuthorized(req.headers.authorization);
+router.delete('/:id', routerHelpers.isAuthenticated, function (req, res, next) {
+  var admin = isAdmin(req.headers.authorization);
 
-  if (authorized) {
+  if (admin) {
     Room.findById(req.params.id, function(err, item) {
       if (err) { res.send(err); }
 

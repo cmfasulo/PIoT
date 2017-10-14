@@ -12,13 +12,9 @@ Start React dev server:
 
 ## TODOs
 Client:
-* Validation and sanitize form inputs
-* Catch/handle form response errors
-* Restrict device control per user permissions
 * Global styles/configure theme
+* DRY refactor
 
 Server:
-* Validate and sanitize api requests
-* Catch/handle server/mongoose errors
-* Restrict device control per user permissions
+* Catch and handle server/mongoose errors
 * Device "checkin" cron job

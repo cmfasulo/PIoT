@@ -8,6 +8,7 @@ var cors = require('cors');
 var passport = require('passport');
 var User = require('./db/models/User');
 var passportJWT = require('passport-jwt');
+var routerHelpers = require('./routerHelpers');
 var config = require('../config');
 
 // API Endpoints
@@ -46,6 +47,7 @@ app.get('/', function (req, res) {
 });
 
 // Router Middleware
+app.use(routerHelpers.sanitize);
 app.use('/', login);
 app.use('/users', users);
 app.use('/devices', devices);

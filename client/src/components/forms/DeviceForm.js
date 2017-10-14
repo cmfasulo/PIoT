@@ -22,6 +22,19 @@ class DeviceForm extends Form {
     this.setState({ [field]: payload });
   }
 
+  validations(err) {
+    let required = ['name', 'type', 'localIp', 'location'];
+
+    required.forEach((field) => {
+      if (!this.state[field]) {
+        err.error = true;
+        err.errorMessage[field] = 'This field is required.';
+      }
+    });
+
+    return err;
+  }
+
   formFields() {
     return (
       <div className="form-fields">
@@ -34,6 +47,7 @@ class DeviceForm extends Form {
           value={this.state.name}
           style={{ width: "100%" }}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage.name || ''}
         />
 
         <SelectField
@@ -44,6 +58,7 @@ class DeviceForm extends Form {
           style={{ width: "100%" }}
           selectedMenuItemStyle={{ color: this.styles.color.primary }}
           onChange={(event, key, payload) => {this.handleSelect(event, payload, 'type')}}
+          errorText={this.state.errorMessage.type || ''}
         >
           <MenuItem value={"switch"} primaryText="Switch" />
           <MenuItem value={"sensor"} primaryText="Sensor" />
@@ -57,6 +72,7 @@ class DeviceForm extends Form {
           style={{ width: "100%" }}
           selectedMenuItemStyle={{ color: this.styles.color.primary }}
           onChange={(event, key, payload) => {this.handleSelect(event, payload, 'location')}}
+          errorText={this.state.errorMessage.location || ''}
         >
           {this.props.dialogExtras.rooms.map((room, i) => (
             <MenuItem key={i} value={room._id} primaryText={room.name} />
@@ -72,6 +88,7 @@ class DeviceForm extends Form {
           value={this.state.localIp}
           style={{ width: "100%" }}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage.localIp || ''}
         />
       </div>
     );

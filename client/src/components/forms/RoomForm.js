@@ -13,6 +13,19 @@ class RoomForm extends Form {
     });
   }
 
+  validations(err) {
+    let required = ['_id', 'name'];
+
+    required.forEach((field) => {
+      if (!this.state[field]) {
+        err.error = true;
+        err.errorMessage[field] = 'This field is required.';
+      }
+    });
+
+    return err;
+  }
+
   formFields() {
     return (
       <div className="form-fields">
@@ -26,6 +39,7 @@ class RoomForm extends Form {
           style={{ width: "100%" }}
           disabled={!this.props.isNew}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage._id || ''}
         />
 
         <TextField
@@ -37,6 +51,7 @@ class RoomForm extends Form {
           value={this.state.name}
           style={{ width: "100%" }}
           onChange={this.handleChange}
+          errorText={this.state.errorMessage.name || ''}
         />
       </div>
     );

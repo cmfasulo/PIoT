@@ -2,18 +2,8 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 var axios = require('axios');
-var passport = require('passport');
-var decode = require('jwt-decode');
+var routerHelpers = require('../routerHelpers');
 var Device = require('../db/models/Device');
-
-var isAuthenticated = passport.authenticate('jwt', { session: false });
-
-var isAuthorized = function(auth) {
-  var token = auth.substring(auth.indexOf(' ') + 1);
-  var decoded = token && decode(token);
-
-  return decoded.admin;
-};
 
 var getDateTime = function() {
   var currentdate = new Date();
@@ -39,7 +29,7 @@ router.post('/', function(req, res, next) {
   newItem.save(function(err, item) {
     if (err) { res.send(err); }
 
-    item.populate('location', function(err) {
+    item && item.populate('location', function(err) {
       if (err) { res.send(err); }
       res.status(200).send(item);
     });
@@ -54,21 +44,49 @@ router.get('/:id', function(req, res, next) {
 });
 
 router.put('/:id', function(req, res, next) {
-  Device.findById(req.body._id, function(err, item) {
+  Device.findById(req.params.id, function(err, item) {
     if (err) { res.send(err); }
 
-    if (req.body.state && req.body.state !== item.state) {
-      axios.get('http://' + req.body.localIp + '/' + req.body.state, { timeout: 3000 })
-      .then(function (response) {
+    if (routerHelpers.isAuthorized(req.headers.authorization, item.location)) {
+      if (req.body.state && req.body.state !== item.state) {
+        axios.get('http://' + req.body.localIp + '/' + req.body.state, { timeout: 3000 })
+        .then(function (response) {
 
+          var keys = Object.keys(req.body);
+          keys.forEach(function(key) {
+            item[key] = req.body[key];
+          });
+
+          item.state = response.data.state;
+          item.lastStateChange = getDateTime();
+          item.lastStatusUpdate = getDateTime();
+          item.save(function (err, updatedItem) {
+            if (err) { res.send(err); }
+
+            updatedItem.populate('location', function(err) {
+              if (err) { res.send(err); }
+              res.status(200).send(updatedItem);
+            });
+          });
+        })
+        .catch(function (error) {
+          item.state = 'off';
+          item.status = 'offline';
+          item.save(function (err, updatedItem) {
+            if (err) { res.send(err); }
+
+            updatedItem.populate('location', function(err) {
+              if (err) { res.send(err); }
+              res.status(200).send(updatedItem);
+            });
+          });
+        });
+      } else {
         var keys = Object.keys(req.body);
         keys.forEach(function(key) {
           item[key] = req.body[key];
         });
 
-        item.state = response.data.state;
-        item.lastStateChange = getDateTime();
-        item.lastStatusUpdate = getDateTime();
         item.save(function (err, updatedItem) {
           if (err) { res.send(err); }
 
@@ -77,33 +95,9 @@ router.put('/:id', function(req, res, next) {
             res.status(200).send(updatedItem);
           });
         });
-      })
-      .catch(function (error) {
-        item.state = 'off';
-        item.status = 'offline';
-        item.save(function (err, updatedItem) {
-          if (err) { res.send(err); }
-
-          updatedItem.populate('location', function(err) {
-            if (err) { res.send(err); }
-            res.status(200).send(updatedItem);
-          });
-        });
-      });
+      }
     } else {
-      var keys = Object.keys(req.body);
-      keys.forEach(function(key) {
-        item[key] = req.body[key];
-      });
-
-      item.save(function (err, updatedItem) {
-        if (err) { res.send(err); }
-
-        updatedItem.populate('location', function(err) {
-          if (err) { res.send(err); }
-          res.status(200).send(updatedItem);
-        });
-      });
+      res.status(401).send('Unauthorized: Device Permissions.');
     }
   });
 });
@@ -165,10 +159,10 @@ router.post('/checkin', function(req, res, next) {
   });
 });
 
-router.delete('/:id', isAuthenticated, function (req, res, next) {
-  var authorized = isAuthorized(req.headers.authorization);
+router.delete('/:id', routerHelpers.isAuthenticated, function (req, res, next) {
+  var admin = routerHelpers.isAdmin(req.headers.authorization);
 
-  if (authorized) {
+  if (admin) {
     Device.findById(req.params.id, function(err, item) {
       if (err) { res.send(err); }
 

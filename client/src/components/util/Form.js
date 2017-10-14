@@ -18,7 +18,9 @@ class Form extends Component {
     super(props);
 
     this.state = {
-      confirmDelete: false
+      confirmDelete: false,
+      error: false,
+      errorMessage: {}
     }
 
     this.styles = styles;
@@ -26,6 +28,8 @@ class Form extends Component {
     this.handleAdd = this.handleAdd.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.validate = this.validate.bind(this);
+    this.validations = this.validations.bind(this);
   }
 
   handleAdd(event) {
@@ -37,7 +41,23 @@ class Form extends Component {
   }
 
   handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
+    let state = this.state;
+    state[event.target.name] = event.target.value;
+    this.setState(state);
+    this.validate();
+  }
+
+  validate() {
+    let err = {
+      error: false,
+      errorMessage: {}
+    };
+
+    this.setState(this.validations(err));
+  }
+
+  validations(err) {
+    return err;
   }
 
   formFields() {
@@ -76,6 +96,7 @@ class Form extends Component {
         labelColor={styles.color.white}
         backgroundColor={styles.color.primary}
         style={{ margin: "5px" }}
+        disabled={this.state.error}
         onClick={this.handleAdd} />
     ) : (
       <RaisedButton
@@ -83,6 +104,7 @@ class Form extends Component {
         labelColor={styles.color.white}
         backgroundColor={styles.color.primary}
         style={{ margin: "5px" }}
+        disabled={this.state.error}
         onClick={this.handleUpdate} />
     )
   }

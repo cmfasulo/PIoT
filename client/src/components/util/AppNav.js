@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MenuIcon from 'material-ui/svg-icons/navigation/menu';
-import LogoutIcon from 'material-ui/svg-icons/action/eject';
+import Divider from 'material-ui/Divider';
 import decode from 'jwt-decode';
 
 import pi from '../../drawables/pi.svg';
@@ -37,18 +37,22 @@ class AppNav extends Component {
   }
 
   navLinks() {
+    let logoutText = "Logout (" + this.state.username + ")";
+
     return (
       <IconMenu
         iconButtonElement={<IconButton><MenuIcon /></IconButton>}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        listStyle={{ textAlign: "right" }}
       >
         <MenuItem primaryText="Dashboard" containerElement={<Link to="/" />} />
         <MenuItem primaryText="Profile" containerElement={<Link to="/profile" />} />
         { this.state.admin && (
         <MenuItem primaryText="Admin" containerElement={<Link to="/admin" />} />
         )}
-        <MenuItem primaryText="Sign out" leftIcon={<LogoutIcon />} onClick={this.logout} />
+        <Divider />
+        <MenuItem primaryText={logoutText} onClick={this.logout} />
       </IconMenu>
     )
   }

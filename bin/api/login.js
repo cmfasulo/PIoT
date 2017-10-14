@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var User = require('../db/models/User');
 var jwt = require('jsonwebtoken');
+var routerHelpers = require('../routerHelpers');
 var config = require('../../config');
 
 router.post('/login', function(req, res, next) {
@@ -36,9 +37,7 @@ router.post('/login', function(req, res, next) {
 });
 
 router.post('/authenticate', function(req, res, next) {
-  var isAuthenticated = passport.authenticate('jwt', { session: false });
-
-  if (!isAuthenticated) {
+  if (!routerHelpers.isAuthenticated) {
     res.status(200).send({ message: 'Token Valid.'});
   } else {
     res.status(400).send({ message: 'Token Invalid.'});

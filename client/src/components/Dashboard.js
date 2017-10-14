@@ -4,6 +4,7 @@ import { TableRow, TableRowColumn } from 'material-ui/Table';
 import Toggle from 'material-ui/Toggle';
 import RaisedButton from 'material-ui/RaisedButton';
 import RefreshIcon from 'material-ui/svg-icons/action/cached';
+import decode from 'jwt-decode';
 import axios from '../axios';
 
 const styles = {
@@ -36,6 +37,7 @@ class Dashboard extends CollectionTable {
 
     this.toggleState = this.toggleState.bind(this);
     this.pingDevice = this.pingDevice.bind(this);
+    this.checkAuth = this.checkAuth.bind(this);
     this.dataRow = this.dataRow.bind(this);
   }
 
@@ -78,10 +80,19 @@ class Dashboard extends CollectionTable {
       }.bind(this))
   }
 
+  checkAuth(deviceLocation) {
+    let token = localStorage.getItem('jwtPIoT') || null;
+    let decoded = token && decode(token);
+    var admin = decoded && decoded.admin;
+    var devicePermission = decoded && decoded.permissions.indexOf(deviceLocation) !== -1;
+
+    return (admin || devicePermission);
+  }
+
   dataRow() {
     if (this.state.items instanceof Array) {
       return this.state.items.map((object, i) => {
-        return (
+        return this.checkAuth(object.location._id) ? (
           <TableRow key={i}>
             <TableRowColumn>{object.name}</TableRowColumn>
             <TableRowColumn>{object.location.name}</TableRowColumn>
@@ -107,7 +118,7 @@ class Dashboard extends CollectionTable {
               )}
             </TableRowColumn>
           </TableRow>
-        );
+        ) : null;
       });
     }
   }
