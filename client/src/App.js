@@ -1,33 +1,12 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
 import { GridList } from 'material-ui/GridList';
-import './styles/App.css';
 
 import { BeatLoader } from 'react-spinners';
 import AppNav from './components/util/AppNav';
 import Dashboard from './components/Dashboard';
 import Admin from './components/Admin';
 import Profile from './components/Profile';
-// import List from './components/util/List';
-// import dashboardDevices from './props/dashboardDevices';
-
-const styles = {
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center'
-
-  },
-  gridList: {
-    textAlign: 'center',
-    overflowY: 'auto',
-    paddingBottom: '25px'
-  },
-  color: {
-    primary: "#2196f4",
-    white: "#ffffff"
-  }
-};
 
 class App extends Component {
 
@@ -50,15 +29,15 @@ class App extends Component {
     return (
       <div>
         <div className={this.state.class}>
-          <BeatLoader color={styles.color.primary} loading={this.state.loading} />
+          <BeatLoader color={'#2196f4'} loading={this.state.loading} />
         </div>
         <AppNav/>
-        <div style={styles.root}>
+        <div className="root">
           <GridList
             cols={1}
             cellHeight={'auto'}
             padding={0}
-            style={styles.gridList}
+            className="gridList"
           >
             <Route exact path='/' render={() => (<Dashboard toggleLoading={this.toggleLoading} />)}/>
             <Route path='/admin' render={() => (<Admin toggleLoading={this.toggleLoading} />)}/>

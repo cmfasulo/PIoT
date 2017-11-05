@@ -2,13 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import decode from 'jwt-decode';
-
-import './styles/index.css';
-import './styles/App.css';
 
 import App from './App';
 import Login from './components/Login';
+import './styles/index.css';
+
+const muiTheme = getMuiTheme({
+  palette: {
+    primary1Color: '#2196f4',
+    accent1Color: '#000000',
+  }
+});
 
 const checkToken = () => {
   let token = localStorage.getItem('jwtPIoT') || null;
@@ -39,7 +45,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 ReactDOM.render(
   <Router>
-    <MuiThemeProvider>
+    <MuiThemeProvider muiTheme={muiTheme}>
       <Switch>
         <Route exact path='/login' component={Login} />
         <PrivateRoute path="/" component={App} />

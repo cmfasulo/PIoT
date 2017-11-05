@@ -7,14 +7,6 @@ import Users from './Users';
 import Devices from './Devices';
 import Rooms from './Rooms';
 
-const styles = {
-  color: {
-    primary: "#2196f4",
-    black: "#000000",
-    white: "#ffffff"
-  }
-};
-
 class Admin extends Component {
 
   constructor(props) {
@@ -43,10 +35,7 @@ class Admin extends Component {
 
   render() {
     return this.state.admin ? (
-      <Tabs
-        inkBarStyle={{ background: styles.color.black }}
-        tabItemContainerStyle={{ backgroundColor: styles.color.primary}}
-      >
+      <Tabs>
         <Tab label="Users" >
           <Users toggleLoading={this.props.toggleLoading} />
         </Tab>

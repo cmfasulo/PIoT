@@ -67,37 +67,28 @@ class UserForm extends Form {
     return (
       <div className="form-fields">
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="First Name"
           name="firstName"
           type="text"
           value={this.state.firstName}
-          style={{ width: "100%" }}
           onChange={this.handleChange}
           errorText={this.state.errorMessage.firstName || ''}
         />
 
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="Last Name"
           name="lastName"
           type="text"
           value={this.state.lastName}
-          style={{ width: "100%" }}
           onChange={this.handleChange}
           errorText={this.state.errorMessage.lastName || ''}
         />
 
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="Username"
           name="username"
           type="text"
           value={this.state.username}
-          style={{ width: "100%" }}
           onChange={this.handleChange}
           errorText={this.state.errorMessage.username || ''}
         />
@@ -109,8 +100,7 @@ class UserForm extends Form {
               key={i}
               name={room._id}
               label={room.name}
-              iconStyle={{ fill: this.styles.color.primary }}
-              style={{ width: "100%" }}
+              className="checkbox"
               checked={this.state.permissions.indexOf(room._id) !== -1}
               onCheck={this.updatePermissions}
             />
@@ -120,14 +110,11 @@ class UserForm extends Form {
 
         {this.props.isNew && (
           <TextField
-            floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-            underlineFocusStyle={{ borderColor: this.styles.color.primary }}
             floatingLabelText="Password"
             name="password"
             type="password"
             hintText="Enter Password"
             defaultValue=""
-            style={{ width: "100%" }}
             onChange={this.handleChange}
             errorText={this.state.errorMessage.password || ''}
           />
@@ -135,14 +122,11 @@ class UserForm extends Form {
 
         {this.props.isNew && (
           <TextField
-            floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-            underlineFocusStyle={{ borderColor: this.styles.color.primary }}
             floatingLabelText="Confirm Password"
             name="passwordConfirm"
             type="password"
             hintText="Confirm Password"
             defaultValue=""
-            style={{ width: "100%" }}
             onChange={this.handleChange}
             errorText={this.state.errorMessage.passwordConfirm || ''}
           />

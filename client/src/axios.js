@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+let apiServer = 'http://localhost:4242';
+
 let instance = axios.create({
-  baseURL: 'http://localhost:4242'
+  baseURL:apiServer
 });
 
 instance.interceptors.response.use(undefined, function (err) {

@@ -7,23 +7,6 @@ import axios from '../axios';
 import pi from '../drawables/pi.svg';
 import '../styles/index.css';
 
-const styles = {
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center'
-  },
-  gridList: {
-    textAlign: 'center',
-    overflowY: 'auto',
-    paddingBottom: '25px'
-  },
-  color: {
-    primary: "#2196f4",
-    white: "#ffffff"
-  }
-};
-
 class Login extends Component {
 
   constructor(props) {
@@ -77,19 +60,17 @@ class Login extends Component {
           <img src={pi} className="App-logo" alt="pi" />
           <h2>Welcome to PIoT!</h2>
         </div>
-        <div style={styles.root}>
+        <div className="root">
           <GridList
             cols={1}
             cellHeight={'auto'}
-            style={styles.gridList}
+            className="gridList"
           >
             <h2>Login</h2>
             <form onSubmit={(event) => this.handleSubmit(event)}>
               <TextField
                 hintText="Enter Username"
                 floatingLabelText="Username"
-                floatingLabelShrinkStyle={{ color: styles.color.primary }}
-                underlineFocusStyle={{ borderColor: styles.color.primary }}
                 name="username"
                 value={this.state.username}
                 errorText={this.state.errorMessage}
@@ -100,8 +81,6 @@ class Login extends Component {
               <TextField
                 hintText="Enter Password"
                 floatingLabelText="Password"
-                floatingLabelShrinkStyle={{ color: styles.color.primary }}
-                underlineFocusStyle={{ borderColor: styles.color.primary }}
                 name="password"
                 type="password"
                 value={this.state.password}
@@ -114,8 +93,7 @@ class Login extends Component {
                 type="submit"
                 label="Login"
                 icon={<LoginIcon />}
-                backgroundColor={styles.color.primary}
-                labelColor={styles.color.white}
+                className="submit"
               />
             </form>
           </GridList>

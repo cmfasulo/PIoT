@@ -9,12 +9,3 @@ Start node server:
 
 Start React dev server:
 ```cd client && npm start```
-
-## TODOs
-Client:
-* Global styles/configure theme
-* DRY refactor
-
-Server:
-* Catch and handle server/mongoose errors
-* Device "checkin" cron job

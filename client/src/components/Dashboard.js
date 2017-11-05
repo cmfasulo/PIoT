@@ -7,23 +7,6 @@ import RefreshIcon from 'material-ui/svg-icons/action/cached';
 import decode from 'jwt-decode';
 import axios from '../axios';
 
-const styles = {
-  color: {
-    primary: "#2196f4",
-    white: "#ffffff",
-    delete: "#ff0000"
-  },
-  thumbOff: {
-    backgroundColor: '#87acc9',
-  },
-  thumbSwitched: {
-    backgroundColor: "#2196f4",
-  },
-  track: {
-    backgroundColor: "#c8c8c8",
-  }
-};
-
 class Dashboard extends CollectionTable {
 
   constructor(props) {
@@ -102,16 +85,16 @@ class Dashboard extends CollectionTable {
                 <Toggle
                   toggled={object.state === 'on' ? true : false}
                   onToggle={(event) => this.toggleState(event, object._id)}
-                  thumbStyle={styles.thumbOff}
-                  thumbSwitchedStyle={styles.thumbSwitched}
-                  trackStyle={styles.track}
-                  trackSwitchedStyle={styles.track}
+                  thumbStyle={{ backgroundColor: "#87acc9" }}
+                  thumbSwitchedStyle={{ backgroundColor: "#2196f4" }}
+                  trackStyle={{ backgroundColor: "#c8c8c8" }}
+                  trackSwitchedStyle={{ backgroundColor: "#c8c8c8" }}
                   iconStyle={{ margin: "auto" }}
                 />
               ) : (
                 <RaisedButton
-                  icon={<RefreshIcon color={styles.color.white}/>}
-                  backgroundColor={styles.color.primary}
+                  icon={<RefreshIcon/>}
+                  className="submit"
                   style={{ minWidth: "35px" }}
                   onClick={(event) => this.pingDevice(event, object._id)}
                 />

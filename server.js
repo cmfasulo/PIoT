@@ -44,7 +44,7 @@ app.use(cors({ origin: ['http://localhost:3000', 'http://127.0.0.1:3000'] }));
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});routerHelpers
+});
 
 // Router Middleware
 app.use(routerHelpers.sanitize);

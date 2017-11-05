@@ -1,18 +1,9 @@
 import React, { Component } from 'react';
-import { Table, TableHeader, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
+import { Table, TableBody, TableRow, TableRowColumn } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import axios from '../axios';
 import decode from 'jwt-decode';
-
-const styles = {
-  color: {
-    primary: "#2196f4",
-    white: "#ffffff",
-    update: "#22cb00",
-    cancel: "#ff0000"
-  }
-};
 
 class Profile extends Component {
 
@@ -94,7 +85,7 @@ class Profile extends Component {
             this.setState(response.data);
             this.toggleEditing(null);
           }
-          
+
           this.props.toggleLoading(false);
         }
       }.bind(this))
@@ -136,7 +127,6 @@ class Profile extends Component {
   edit(field, type) {
     return (
       <TextField
-        underlineFocusStyle={{ borderColor: styles.color.primary }}
         name={field}
         type={type || "text"}
         defaultValue={this.state[field]}
@@ -148,34 +138,24 @@ class Profile extends Component {
 
   buttonRow(editing) {
     return editing ? (
-      <TableRow>
-        <TableRowColumn>
-          <RaisedButton
-            label="Update"
-            labelColor={styles.color.white}
-            backgroundColor={styles.color.update}
-            style={{ margin: "5px" }}
-            disabled={this.state.error}
-            onClick={this.handleUpdate} />
-          <RaisedButton
-            label="Cancel"
-            labelColor={styles.color.white}
-            backgroundColor={styles.color.cancel}
-            style={{ margin: "5px" }}
-            onClick={this.toggleEditing} />
-        </TableRowColumn>
-      </TableRow>
+      <div>
+        <RaisedButton
+          label="Cancel"
+          className="cancel"
+          onClick={this.toggleEditing} />
+        <RaisedButton
+          label="Update"
+          className="update"
+          disabled={this.state.error}
+          onClick={this.handleUpdate} />
+      </div>
     ) : (
-      <TableRow>
-        <TableRowColumn>
-          <RaisedButton
-            label="Edit"
-            labelColor={styles.color.white}
-            backgroundColor={styles.color.primary}
-            style={{ margin: "5px auto" }}
-            onClick={this.toggleEditing} />
-        </TableRowColumn>
-      </TableRow>
+      <div>
+        <RaisedButton
+          label="Edit"
+          className="submit"
+          onClick={this.toggleEditing} />
+      </div>
     )
   }
 
@@ -184,9 +164,6 @@ class Profile extends Component {
       <div>
         <h2>Profile</h2>
         <Table className="table-left">
-          <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-            {this.buttonRow(this.state.isEditing)}
-          </TableHeader>
           <TableBody displayRowCheckbox={false}>
             <TableRow>
               <TableRowColumn>First Name: </TableRowColumn>
@@ -237,6 +214,10 @@ class Profile extends Component {
           )}
           </TableBody>
         </Table>
+
+        <div className="buttonRow">
+          {this.buttonRow(this.state.isEditing)}
+        </div>
       </div>
     );
   }

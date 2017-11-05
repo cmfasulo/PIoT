@@ -3,15 +3,6 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
 
-const styles = {
-  color: {
-    primary: "#2196f4",
-    white: "#ffffff",
-    update: "#22cb00",
-    cancel: "#ff0000"
-  }
-};
-
 class Form extends Component {
 
   constructor(props) {
@@ -22,8 +13,6 @@ class Form extends Component {
       error: false,
       errorMessage: {}
     }
-
-    this.styles = styles;
 
     this.handleAdd = this.handleAdd.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
@@ -66,8 +55,6 @@ class Form extends Component {
         <TextField
           hintText="Hello World!"
           floatingLabelText="This is an Input"
-          floatingLabelShrinkStyle={{ color: styles.color.primary }}
-          underlineFocusStyle={{ borderColor: styles.color.primary }}
           name="fieldName"
           type="text"
           value=""
@@ -82,9 +69,7 @@ class Form extends Component {
     return (
       <RaisedButton
         label="Cancel"
-        labelColor={styles.color.white}
-        backgroundColor={styles.color.cancel}
-        style={{ margin: "5px" }}
+        className="cancel"
         onClick={this.props.toggleDialog} />
     );
   }
@@ -93,17 +78,13 @@ class Form extends Component {
     return this.props.isNew ? (
       <RaisedButton
         label="Add"
-        labelColor={styles.color.white}
-        backgroundColor={styles.color.primary}
-        style={{ margin: "5px" }}
+        className="update"
         disabled={this.state.error}
         onClick={this.handleAdd} />
     ) : (
       <RaisedButton
         label="Update"
-        labelColor={styles.color.white}
-        backgroundColor={styles.color.primary}
-        style={{ margin: "5px" }}
+        className="update"
         disabled={this.state.error}
         onClick={this.handleUpdate} />
     )

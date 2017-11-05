@@ -8,16 +8,6 @@ import ContentRemove from 'material-ui/svg-icons/content/delete-sweep';
 import Divider from 'material-ui/Divider';
 import axios from '../../axios';
 
-const styles = {
-  color: {
-    primary: "#2196f4",
-    white: "#ffffff",
-    black: "#000000",
-    update: "#22cb00",
-    cancel: "#ff0000"
-  }
-};
-
 class CollectionTable extends Component {
 
   constructor(props) {
@@ -194,8 +184,8 @@ class CollectionTable extends Component {
 
         {!this.state.isNew && (
           <FloatingActionButton
+            className="cancel"
             mini={true}
-            backgroundColor={styles.color.cancel}
             style={{ flex: "0 0 auto" }}
             onClick={this.toggleConfirmDelete}
           >
@@ -210,13 +200,13 @@ class CollectionTable extends Component {
     const actions = [
       <FlatButton
         label="Cancel"
-        labelStyle={{ color: styles.color.black }}
+        className="confirm-cancel"
         primary={true}
         onClick={this.toggleConfirmDelete}
       />,
       <FlatButton
         label="Delete"
-        labelStyle={{ color: styles.color.cancel }}
+        className="confirm-delete"
         primary={true}
         onClick={this.del}
       />,
@@ -229,7 +219,7 @@ class CollectionTable extends Component {
     const actions = [
       <FlatButton
         label="Darn, Okay..."
-        labelStyle={{ color: styles.color.black }}
+        className="confirm-cancel"
         primary={true}
         onClick={this.toggleError}
       />
@@ -260,7 +250,7 @@ class CollectionTable extends Component {
     return (
       <div>
         {this.title && (<h2>{this.title}</h2>)}
-        <Table onRowSelection={this.edit}>
+        <Table className={this.title + '-Table'} onRowSelection={this.edit}>
           <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
             {this.headerRow()}
           </TableHeader>
@@ -275,7 +265,6 @@ class CollectionTable extends Component {
           <div style={{ display: "flex", justifyContent: "space-evenly", marginTop: "10px" }}>
             <FloatingActionButton
               mini={true}
-              backgroundColor={styles.color.primary}
               onClick={this.new}
             >
               <ContentAdd />

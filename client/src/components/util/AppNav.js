@@ -9,15 +9,6 @@ import Divider from 'material-ui/Divider';
 import decode from 'jwt-decode';
 
 import pi from '../../drawables/pi.svg';
-import '../../styles/App.css';
-
-const styles = {
-  color: {
-    primary: "#2196f4",
-    black: "#000000",
-    white: "#ffffff"
-  }
-};
 
 class AppNav extends Component {
 
@@ -66,14 +57,10 @@ class AppNav extends Component {
     return (
       <AppBar
         title="PIoT"
+        className="App-bar"
         iconElementLeft={<img src={pi} className="nav-logo" alt="PIoT" />}
         iconStyleLeft={{}}
         iconElementRight={this.navLinks()}
-        style={{
-          backgroundColor: styles.color.black,
-          maxHeight: "75px",
-          alignItems: "center"
-        }}
       />
     );
   }

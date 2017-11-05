@@ -30,26 +30,20 @@ class RoomForm extends Form {
     return (
       <div className="form-fields">
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="ID"
           name="_id"
           type="text"
           value={this.state._id}
-          style={{ width: "100%" }}
           disabled={!this.props.isNew}
           onChange={this.handleChange}
           errorText={this.state.errorMessage._id || ''}
         />
 
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="Name"
           name="name"
           type="text"
           value={this.state.name}
-          style={{ width: "100%" }}
           onChange={this.handleChange}
           errorText={this.state.errorMessage.name || ''}
         />

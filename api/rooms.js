@@ -44,7 +44,7 @@ router.put('/:id', routerHelpers.isAuthenticated, function(req, res, next) {
 });
 
 router.delete('/:id', routerHelpers.isAuthenticated, function (req, res, next) {
-  var admin = isAdmin(req.headers.authorization);
+  var admin = routerHelpers.isAdmin(req.headers.authorization);
 
   if (admin) {
     Room.findById(req.params.id, function(err, item) {

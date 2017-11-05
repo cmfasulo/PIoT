@@ -39,24 +39,19 @@ class DeviceForm extends Form {
     return (
       <div className="form-fields">
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="Name"
           name="name"
           type="text"
           value={this.state.name}
-          style={{ width: "100%" }}
           onChange={this.handleChange}
           errorText={this.state.errorMessage.name || ''}
         />
 
         <SelectField
           floatingLabelText="Type"
-          floatingLabelStyle={{ color: this.styles.color.primary }}
           name="type"
           value={this.state.type}
-          style={{ width: "100%" }}
-          selectedMenuItemStyle={{ color: this.styles.color.primary }}
+          selectedMenuItemStyle={{ color: "#2196f4" }}
           onChange={(event, key, payload) => {this.handleSelect(event, payload, 'type')}}
           errorText={this.state.errorMessage.type || ''}
         >
@@ -66,11 +61,9 @@ class DeviceForm extends Form {
 
         <SelectField
           floatingLabelText="Location"
-          floatingLabelStyle={{ color: this.styles.color.primary }}
           name="location"
           value={this.state.location}
-          style={{ width: "100%" }}
-          selectedMenuItemStyle={{ color: this.styles.color.primary }}
+          selectedMenuItemStyle={{ color: "#2196f4" }}
           onChange={(event, key, payload) => {this.handleSelect(event, payload, 'location')}}
           errorText={this.state.errorMessage.location || ''}
         >
@@ -80,13 +73,10 @@ class DeviceForm extends Form {
         </SelectField>
 
         <TextField
-          floatingLabelShrinkStyle={{ color: this.styles.color.primary }}
-          underlineFocusStyle={{ borderColor: this.styles.color.primary }}
           floatingLabelText="Local IP"
           name="localIp"
           type="text"
           value={this.state.localIp}
-          style={{ width: "100%" }}
           onChange={this.handleChange}
           errorText={this.state.errorMessage.localIp || ''}
         />

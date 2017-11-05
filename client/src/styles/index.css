@@ -13,15 +13,64 @@ table {
   word-wrap: break-word;
 }
 
-th, td {
-  text-align: center !important;
-  white-space: normal !important;
-  padding-left: 10px !important;
-  padding-right: 10px !important;
+svg {
+  fill: #ffffff !important;
+}
+
+.checkbox * {
+  fill: #2196f4 !important;
 }
 
 #root {
   min-height: 100%;
+}
+
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.gridList {
+  text-align: center;
+  overflow-y: auto;
+  padding-bottom: 25px;
+}
+
+.Dashboard-Table * {
+  text-align: center !important;
+}
+
+.buttonRow {
+  padding: 10px !important;
+}
+
+.submit > button {
+  background-color: #2196f4 !important;
+}
+
+.update > button {
+  background-color: #22cb00 !important;
+}
+
+.cancel > button {
+  background-color: #ff0000 !important;
+}
+
+.update, .cancel, .update > button, .cancel > button {
+  margin: 5px;
+}
+
+.submit > button *, .update > button *, .cancel > button * {
+  color: #ffffff !important;
+}
+
+.confirm-cancel span {
+  color: #000000 !important;
+}
+
+.confirm-delete span {
+  color: #ff0000 !important;
 }
 
 .loading {
@@ -45,6 +94,12 @@ th, td {
   box-shadow: 0 0 0 rgba(33,150,244, 0.4);
   border-radius: 30%;
   animation: pulse infinite 2s;
+}
+
+.App-bar {
+  background-color: #000000 !important;
+  max-height: 75px !important;
+  align-items: center !important;
 }
 
 .App-header, .App-footer {
@@ -79,18 +134,27 @@ th, td {
   text-align: left !important;
 }
 
+.table-left {
+  border-top: 1px solid rgb(224, 224, 224);
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+
 .online {
-  color: green;
+  color: #15ff00;
   font-weight: bold;
 }
 
 .offline {
-  color: red;
+  color: #ff0000;
   font-weight: bold;
 }
 
 .form-fields {
   width: 100%;
+}
+
+.form-fields > div {
+  width: 100% !important;
 }
 
 .form-buttons {
