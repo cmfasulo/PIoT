@@ -1,16 +1,25 @@
 #!/usr/bin/env node
 
 var app = require('./server');
-var debug = require('debug')('PIoT:server');
 var http = require('http');
+// var https = require('https');
+// var fs = require('fs');
 var config = require('./config');
 
-var port = normalizePort(process.env.PORT || config.port || 4242);
+var address = process.env.ADDRESS || config.server.address || 'localhost';
+var port = normalizePort(process.env.PORT || config.server.port || 4242);
+
 app.set('port', port);
 
+// var httpsOptions = {
+//   cert: fs.readFileSync(path.join(__dirname, 'ssl', server.cert)),
+//   key: fs.readFileSync(path.join(__dirname, 'ssl', server.key))
+// };
+
+// var server = https.createServer(httpsOptions, app);
 var server = http.createServer(app);
 
-server.listen(port);
+server.listen(port, address);
 server.on('error', onError);
 server.on('listening', onListening);
 
@@ -46,8 +55,7 @@ function onError(error) {
 }
 
 function onListening() {
-  var addr = server.address();
-  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-  console.log('Listening on ' + bind);
-  debug('Listening on ' + bind);
+  var addr = server.address().address;
+  var prt = server.address().port;
+  console.log('API server listening at http://%s:%s', addr, prt);
 }

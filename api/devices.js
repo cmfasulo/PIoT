@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var mongoose = require('mongoose');
 var axios = require('axios');
 var routerHelpers = require('../routerHelpers');
 var Device = require('../db/models/Device');

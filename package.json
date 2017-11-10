@@ -1,5 +1,5 @@
 {
-  "name": "PIoT",
+  "name": "Pi-Oh-Tee",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
@@ -22,6 +22,7 @@
   },
   "scripts": {
     "start": "nodemon ./www",
+    "default": "DB_DEFAULT=true nodemon ./www",
     "forever": "forever start ./www"
   }
 }

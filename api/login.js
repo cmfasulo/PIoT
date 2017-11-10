@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 var routerHelpers = require('../routerHelpers');
 var config = require('../config');
 
-router.post('/login', function(req, res, next) {
+router.post('/', function(req, res, next) {
   if (!req.body.username || !req.body.password) {
     res.status(400).send('Username and Password required.');
   } else {
@@ -36,7 +36,7 @@ router.post('/login', function(req, res, next) {
   }
 });
 
-router.post('/authenticate', function(req, res, next) {
+router.get('/authenticate', function(req, res, next) {
   if (!routerHelpers.isAuthenticated) {
     res.status(200).send({ message: 'Token Valid.'});
   } else {

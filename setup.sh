@@ -23,12 +23,3 @@ sudo service mongodb start
 
 # Install node modules
 npm install
-
-# sed command to swap client-side request endpoint with config.js settings
-# TODO
-
-# Pre-populate database with default values in config.js, if present
-# TODO
-
-# Start app
-npm run forever

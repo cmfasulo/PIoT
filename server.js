@@ -41,14 +41,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({ origin: ['http://localhost:3000', 'http://127.0.0.1:3000'] }));
 
-app.use(express.static(path.join(__dirname, 'client', 'build')));
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
 // Router Middleware
 app.use(routerHelpers.sanitize);
-app.use('/', login);
+app.use(express.static(path.join(__dirname, 'build')));
+app.get(['/', '/dashboard'], function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+app.use('/login', login);
 app.use('/users', users);
 app.use('/devices', devices);
 app.use('/rooms', rooms);

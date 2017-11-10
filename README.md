@@ -1,4 +1,4 @@
-# PIoT:
+# Pi-Oh-Tee:
 ## Raspberry Pi IoT API Server with ReactJS User Interface
 
 Raspberry Pi server will communicate with ESP8266/arduino clients running simple local servers to control device states and report online status back to Pi.

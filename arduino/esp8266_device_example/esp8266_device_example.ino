@@ -9,7 +9,7 @@ MDNSResponder mdns;
 // Replace with your network credentials
 const char* ssid = "";
 const char* password = "";
-const char* deviceName = "PIoT-Device";
+const char* deviceName = "pi-oh-tee-Device";
 
 // *** UPDATE THESE FOR YOU NETWORK CONFIG ***
 IPAddress ip(000, 000, 0, 00); // Assign Static local IP address for this device
